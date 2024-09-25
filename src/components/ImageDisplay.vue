@@ -11,10 +11,6 @@
       <button @click="previousImage" :disabled="isFirstImage">⬅️</button>
       <button @click="nextImage" :disabled="isLastImage">➡️</button>
     </div>
-
-    <div class="report-window">
-      <p>{{ report }}</p>
-    </div>
   </div>
 </template>
 
@@ -22,7 +18,7 @@
 // import the images list
 import { images } from '@/data/images.js';
 export default {
-  props: ['report', 'selectedGender'],
+  props: ['selectedGender'],
   data() {
     return {
       images,
@@ -139,12 +135,4 @@ export default {
   cursor: not-allowed;
 }
 
-.report-window {
-  margin-top: 20px;
-  background-color: #333;
-  padding: 10px;
-  width: 100%;
-  text-align: center;
-  border-radius: 5px;
-}
 </style>

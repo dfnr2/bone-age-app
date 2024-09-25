@@ -1,18 +1,25 @@
 <template>
   <div class="clinical-panel">
-    <!-- Gender Slider -->
-    <div class="gender-slider">
-      <div
-        :class="['gender-option', selectedGender === 'male' ? 'active' : 'inactive']"
-        @click="setGender('male')"
-      >
-        Male
+    <div class="panel-header">
+      <!-- Reset Button -->
+      <div class="reset-container">
+        <button @click="resetDates" class="reset-button">Reset</button>
       </div>
-      <div
-        :class="['gender-option', selectedGender === 'female' ? 'active' : 'inactive']"
-        @click="setGender('female')"
-      >
-        Female
+
+      <!-- Gender Slider -->
+      <div class="gender-slider">
+        <div
+          :class="['gender-option', selectedGender === 'male' ? 'active' : 'inactive']"
+          @click="setGender('male')"
+        >
+          Male
+        </div>
+        <div
+          :class="['gender-option', selectedGender === 'female' ? 'active' : 'inactive']"
+          @click="setGender('female')"
+        >
+          Female
+        </div>
       </div>
     </div>
 
@@ -24,9 +31,10 @@
     <label for="imaging-date">Imaging Date:</label>
     <input type="date" v-model="imagingDate" @change="updateReport" />
 
-    <!-- Report Display (inside clinical panel now) -->
+    <!-- Report Display (only in clinical panel) -->
     <div class="report">
-      Report Data: {{ reportData }}
+      Report Data: Gender: {{ reportData.gender }}, Birth Date: {{ reportData.birthDate }},
+      Imaging Date: {{ reportData.imagingDate }}, Age in Months: {{ ageInMonths }}
     </div>
   </div>
 </template>
@@ -36,8 +44,8 @@ export default {
   data() {
     return {
       selectedGender: "male",
-      birthDate: "",
-      imagingDate: this.getLocalDate(),  // Set to current date in YYYY-MM-DD format
+      birthDate: "",  // Birth date is unset
+      imagingDate: this.getLocalDate(),  // Set to today's date
     };
   },
   computed: {
@@ -48,25 +56,40 @@ export default {
         imagingDate: this.imagingDate,
       };
     },
+    ageInMonths() {
+      if (!this.birthDate || !this.imagingDate) return "N/A";
+
+      const birth = new Date(this.birthDate);
+      const imaging = new Date(this.imagingDate);
+      const yearDiff = imaging.getFullYear() - birth.getFullYear();
+      const monthDiff = imaging.getMonth() - birth.getMonth();
+
+      return yearDiff * 12 + monthDiff;  // Total age in months
+    },
   },
   methods: {
     getLocalDate() {
       const today = new Date();
       const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');  // Correct month (0-indexed)
+      const month = String(today.getMonth() + 1).padStart(2, '0');  // Correct month
       const day = String(today.getDate()).padStart(2, '0');  // Correct day
 
-      return `${year}-${month}-${day}`;  // Return YYYY-MM-DD format
+      return `${year}-${month}-${day}`;  // Return local date in YYYY-MM-DD
     },
-  setGender(gender) {
+    setGender(gender) {
       this.selectedGender = gender;
       this.updateReport();
     },
     updateReport() {
       this.$emit('update-report', this.reportData);
     },
-  },
-};
+    resetDates() {
+      this.birthDate = "";  // Reset birth date to unset
+      this.imagingDate = this.getLocalDate();  // Reset imaging date to today's date
+      this.updateReport();  // Update the report to reflect the changes
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -80,13 +103,37 @@ export default {
   border-radius: 8px;
 }
 
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reset-container {
+  width: 25%;  /* 25% of the panel width */
+}
+
+.reset-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 10px;  /* Rounded rectangle */
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
 .gender-slider {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
   padding: 10px;
   background-color: #333;
-  border-radius: 10px;
+  border-radius: 10px;  /* Bigger rounded rect */
+  width: 50%;  /* 50% of the panel width */
+  height: 100%;
 }
 
 .gender-option {
