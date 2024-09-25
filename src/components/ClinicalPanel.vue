@@ -3,14 +3,14 @@
     <!-- Gender Slider -->
     <div class="gender-slider">
       <div
-        :class="['gender-option', selectedGender === 'M' ? 'active' : 'inactive']"
-        @click="setGender('M')"
+        :class="['gender-option', selectedGender === 'male' ? 'active' : 'inactive']"
+        @click="setGender('male')"
       >
         Male
       </div>
       <div
-        :class="['gender-option', selectedGender === 'F' ? 'active' : 'inactive']"
-        @click="setGender('F')"
+        :class="['gender-option', selectedGender === 'female' ? 'active' : 'inactive']"
+        @click="setGender('female')"
       >
         Female
       </div>
@@ -35,9 +35,9 @@
 export default {
   data() {
     return {
-      selectedGender: "M",
+      selectedGender: "male",
       birthDate: "",
-      imagingDate: "",
+      imagingDate: this.getLocalDate(),  // Set to current date in YYYY-MM-DD format
     };
   },
   computed: {
@@ -50,7 +50,15 @@ export default {
     },
   },
   methods: {
-    setGender(gender) {
+    getLocalDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');  // Correct month (0-indexed)
+      const day = String(today.getDate()).padStart(2, '0');  // Correct day
+
+      return `${year}-${month}-${day}`;  // Return YYYY-MM-DD format
+    },
+  setGender(gender) {
       this.selectedGender = gender;
       this.updateReport();
     },

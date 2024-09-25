@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- Title -->
-    <h1>Grelich and Pyle Bone Age Calculator, v1.2</h1>
+    <h1>Greulich and Pyle Bone Age Calculator, v1.3</h1>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      selectedGender: 'M',  // Default to Male
+      selectedGender: 'male',  // Default to Male
       birthDate: '',
       imagingDate: '',
       report: '',

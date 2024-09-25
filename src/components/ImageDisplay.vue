@@ -35,11 +35,14 @@ export default {
   computed: {
     // Filter the images based on selected gender
     filteredImages() {
-      return this.$data.images.filter(image => image.gender === this.selectedGender.toLowerCase());
+      const filtered = this.images.filter(image => image.gender === this.selectedGender.toLowerCase());
+      console.log('Filtered Images:', filtered);
+      return filtered;
     },
-    // Return the current image based on the current index in the filtered list
     currentImage() {
-      return this.filteredImages[this.currentIndex] || {};
+      const image = this.filteredImages[this.currentIndex] || {};
+      console.log('Current Image:', image);
+      return image;
     },
     // Check if it's the first image in the filtered list
     isFirstImage() {
@@ -90,6 +93,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.images);  // This should print the array of images from the imported file
     window.addEventListener("keydown", this.handleKeyPress);
   },
   beforeUnmount() {
