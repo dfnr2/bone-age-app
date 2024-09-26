@@ -61,8 +61,14 @@ export default {
 
       const birth = new Date(this.birthDate);
       const imaging = new Date(this.imagingDate);
-      const yearDiff = imaging.getFullYear() - birth.getFullYear();
-      const monthDiff = imaging.getMonth() - birth.getMonth();
+      let yearDiff = imaging.getFullYear() - birth.getFullYear();
+      let monthDiff = imaging.getMonth() - birth.getMonth();
+      let dayDiff = imaging.getDate() - birth.getDate();
+
+      // Adjust monthDiff if the imaging day is before the birth day in the current month
+      if (dayDiff < 0) {
+        monthDiff -= 1;
+      }
 
       return yearDiff * 12 + monthDiff;  // Total age in months
     },
