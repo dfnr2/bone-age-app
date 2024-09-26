@@ -31,31 +31,34 @@
     <label for="imaging-date">Imaging Date:</label>
     <input type="date" v-model="imagingDate" @change="updateReport" />
 
-    <!-- Report Display (only in clinical panel) -->
+    <!-- Report Display -->
     <div class="report">
-      Report Data: Gender: {{ reportData.gender }}, Birth Date: {{ reportData.birthDate }},
-      Imaging Date: {{ reportData.imagingDate }}, Age in Months: {{ ageInMonths }}
+      <h3>Report Data</h3>
+      <p>Gender: {{ selectedGender }}</p>
+      <p>Birth Date: {{ birthDate }}</p>
+      <p>Imaging Date: {{ imagingDate }}</p>
+      <p>Age in Months: {{ ageInMonths }}</p>
+      <p>Current Image Age: {{ currentImageAge }} months</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    currentImageAge: {   // Receive the current image's age from the parent component
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       selectedGender: "male",
-      birthDate: "",  // Birth date is unset
-      imagingDate: this.getLocalDate(),  // Set to today's date
+      birthDate: "",
+      imagingDate: this.getLocalDate(),  // Set to today's date by default
     };
   },
   computed: {
-    reportData() {
-      return {
-        gender: this.selectedGender,
-        birthDate: this.birthDate,
-        imagingDate: this.imagingDate,
-      };
-    },
     ageInMonths() {
       if (!this.birthDate || !this.imagingDate) return "N/A";
 
@@ -71,7 +74,7 @@ export default {
       }
 
       return yearDiff * 12 + monthDiff;  // Total age in months
-    },
+    }
   },
   methods: {
     getLocalDate() {
@@ -87,12 +90,25 @@ export default {
       this.updateReport();
     },
     updateReport() {
-      this.$emit('update-report', this.reportData);
+      this.$emit('update-report', {
+        gender: this.selectedGender,
+        ageInMonths: this.ageInMonths,
+        birthDate: this.birthDate,
+        imagingDate: this.imagingDate
+      });
     },
     resetDates() {
       this.birthDate = "";  // Reset birth date to unset
       this.imagingDate = this.getLocalDate();  // Reset imaging date to today's date
       this.updateReport();  // Update the report to reflect the changes
+    }
+  },
+  watch: {
+    birthDate() {
+      this.updateReport();  // Ensure birthDate change triggers report update
+    },
+    imagingDate() {
+      this.updateReport();  // Ensure imagingDate change triggers report update
     }
   }
 }

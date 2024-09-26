@@ -7,13 +7,16 @@
     <div class="main-container">
       <!-- Clinical Panel and Image Display -->
       <div class="clinical-panel-container">
-        <ClinicalPanel @update-report="generateReport" />
+        <ClinicalPanel
+          :currentImageAge="currentImage.ageInMonths"
+          @update-report="handleReportUpdate"
+        />
       </div>
       <div class="image-display-container">
         <ImageDisplay
-          :selectedGender="selectedGender"
-          :age="ageInMonths"
-          :report="report"
+          :selectedGender="report.gender || 'male'"
+          :ageInMonths="report.ageInMonths || 0"
+          @update-image="updateCurrentImage"
         />
       </div>
     </div>
@@ -33,36 +36,44 @@ export default {
   },
   data() {
     return {
-      selectedGender: 'male',  // Default to Male
-      birthDate: '',
-      imagingDate: '',
-      report: '',
-      ageInMonths: 0
+      report: {
+        gender: 'male',  // Default to Male
+        birthDate: '',
+        imagingDate: '',
+        ageInMonths: 0,  // Calculated age in months
+      },
+      currentImage: {
+        ageInMonths: 0  // Default to 0
+      }
     };
   },
   methods: {
-    generateReport(data) {
-      this.selectedGender = data.gender;
-      this.birthDate = data.birthDate;
-      this.imagingDate = data.imagingDate;
+    handleReportUpdate(data) {
+      console.log('Received report update:', data);  // <-- Ensure this log appears when the event is emitted
+      this.report = data;  // Update the report object with the new data
 
-      if (this.birthDate && this.imagingDate) {
-        this.ageInMonths = this.calculateAgeInMonths(this.birthDate, this.imagingDate);
+      // Calculate ageInMonths if birthDate and imagingDate are present
+      if (this.report.birthDate && this.report.imagingDate) {
+        this.report.ageInMonths = this.calculateAgeInMonths(this.report.birthDate, this.report.imagingDate);
       }
-
-      this.report = `Gender: ${data.gender}, Birth Date: ${data.birthDate}, Imaging Date: ${data.imagingDate}, Age in Months: ${this.ageInMonths}`;
+    },
+    updateCurrentImage(imageData) {
+      console.log('Updating current image:', imageData);
+      this.currentImage = imageData;  // Update currentImage with the selected image data
     },
     calculateAgeInMonths(birthDate, imagingDate) {
       const birth = new Date(birthDate);
       const imaging = new Date(imagingDate);
 
-      const yearsDifference = imaging.getFullYear() - birth.getFullYear();
-      const monthsDifference = imaging.getMonth() - birth.getMonth();
+      let yearDiff = imaging.getFullYear() - birth.getFullYear();
+      let monthDiff = imaging.getMonth() - birth.getMonth();
+      let dayDiff = imaging.getDate() - birth.getDate();
 
-      // Calculate the total difference in months and round to the nearest integer
-      const ageInMonths = yearsDifference * 12 + monthsDifference;
+      if (dayDiff < 0) {
+        monthDiff -= 1;
+      }
 
-      return ageInMonths;
+      return yearDiff * 12 + monthDiff;
     }
   },
 };

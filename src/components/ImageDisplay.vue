@@ -1,53 +1,55 @@
 <template>
   <div class="image-container">
-    <!-- Image Display -->
-    <div class="image-content" @mousedown.prevent="startDrag" @mousemove="onDrag" @mouseup="endDrag">
-      <img :src="currentImage.src" alt="Bone Age Image" />
-      <div class="image-text">{{ currentImage.text }}</div>
-    </div>
+    <!-- Image and Interpretation Panel -->
+    <div class="image-and-notes">
+      <!-- Image Display with click handling -->
+      <div
+        class="image-content"
+        @click="handleImageClick"
+        @mousedown.prevent="startDrag"
+        @mousemove="onDrag"
+        @mouseup="endDrag"
+      >
+        <img :src="currentImage.src" alt="Bone Age Image" />
+        <div class="image-text">{{ currentImage.text }}</div>
+      </div>
 
-    <!-- Navigation Arrows -->
-    <div class="image-nav">
-      <button @click="previousImage" :disabled="isFirstImage">⬅️</button>
-      <button @click="nextImage" :disabled="isLastImage">➡️</button>
+      <!-- Interpretation Notes Panel -->
+      <div class="interpretation-notes">
+        <h3>Interpretation Notes</h3>
+        <div v-if="currentImage.interpretationNotes" v-html="currentImage.interpretationNotes"></div>
+        <div v-else>No interpretation notes available.</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-// import the images list
 import { images } from '@/data/images.js';
+
 export default {
-  props: ['selectedGender'],
+  props: ['selectedGender', 'ageInMonths'],  // Gender and age props
   data() {
     return {
       images,
-      currentIndex: 0,
+      currentIndex: 0,  // Tracks current image index
       isDragging: false,
       startX: 0,
-
     };
   },
   computed: {
-    // Filter the images based on selected gender
     filteredImages() {
-      const filtered = this.images.filter(image => image.gender === this.selectedGender.toLowerCase());
-      console.log('Filtered Images:', filtered);
-      return filtered;
+      return this.images.filter(image => image.gender === this.selectedGender.toLowerCase());
     },
     currentImage() {
-      const image = this.filteredImages[this.currentIndex] || {};
-      console.log('Current Image:', image);
-      return image;
+      return this.filteredImages[this.currentIndex] || {};
     },
-    // Check if it's the first image in the filtered list
     isFirstImage() {
       return this.currentIndex === 0;
     },
-    // Check if it's the last image in the filtered list
     isLastImage() {
       return this.currentIndex === this.filteredImages.length - 1;
-    },
+    }
   },
   methods: {
     nextImage() {
@@ -60,7 +62,18 @@ export default {
         this.currentIndex--;
       }
     },
-    // Handle dragging to switch images
+    // Handle image click to navigate
+    handleImageClick(event) {
+      const imageWidth = event.target.offsetWidth; // Get image width
+      const clickX = event.offsetX; // Get x-coordinate of the click relative to the image
+
+      // Check if clicked on the right-most third, left-most third, or center
+      if (clickX > (3 * imageWidth) / 5) {
+        this.nextImage(); // Right-most 1/3: move forward
+      } else if (clickX < (2 * imageWidth) / 5) {
+        this.previousImage(); // Left-most 1/3: move backward
+      }
+    },
     startDrag(event) {
       this.isDragging = true;
       this.startX = event.clientX;
@@ -79,7 +92,6 @@ export default {
     endDrag() {
       this.isDragging = false;
     },
-    // Handle keyboard navigation
     handleKeyPress(event) {
       if (event.key === "ArrowRight") {
         this.nextImage();
@@ -87,52 +99,67 @@ export default {
         this.previousImage();
       }
     },
+    updateClosestImage() {
+      if (!this.ageInMonths || this.filteredImages.length === 0) return;
+
+      let closestIndex = 0;
+      let minDiff = Math.abs(this.filteredImages[0].ageInMonths - this.ageInMonths);
+
+      this.filteredImages.forEach((image, index) => {
+        const diff = Math.abs(image.ageInMonths - this.ageInMonths);
+        if (diff < minDiff) {
+          closestIndex = index;
+          minDiff = diff;
+        }
+      });
+
+      this.currentIndex = closestIndex;
+    }
+  },
+  watch: {
+    ageInMonths() {
+      this.updateClosestImage();
+    },
+    selectedGender() {
+      this.updateClosestImage();
+    }
   },
   mounted() {
-    console.log(this.images);  // This should print the array of images from the imported file
     window.addEventListener("keydown", this.handleKeyPress);
   },
   beforeUnmount() {
     window.removeEventListener("keydown", this.handleKeyPress);
-  },
+  }
 };
 </script>
 
 <style scoped>
 .image-container {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
   background-color: #1e1e1e;
   color: white;
 }
 
+.image-and-notes {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .image-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer; /* Add cursor pointer to indicate the image is clickable */
 }
 
-.image-nav {
-  display: flex;
-  justify-content: space-between;
-  width: 200px;
-  margin-top: 20px;
-}
-
-.image-nav button {
+.interpretation-notes {
+  width: 30%;
+  padding: 20px;
   background-color: #333;
   color: white;
-  font-size: 2rem;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
+  margin-left: 20px;
 }
-
-.image-nav button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 </style>
