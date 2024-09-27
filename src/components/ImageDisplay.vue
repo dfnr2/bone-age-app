@@ -46,20 +46,30 @@ export default {
     },
     isFirstImage() {
       return this.currentIndex === 0;
-    },
+   },
     isLastImage() {
       return this.currentIndex === this.filteredImages.length - 1;
     }
   },
   methods: {
+    // Function to set the image age, taking a parameter for the age in months
+    setImageIndex(newImageIndex) {
+      // Set the image age
+      this.currentIndex = newImageIndex;
+      let boneAge = this.filteredImages[this.currentIndex].boneAge;
+
+      console.log('Setting new bone age to ',boneAge);
+      // Emit the age to the parent
+      this.$emit('update-bone-age', boneAge);
+    },
     nextImage() {
       if (!this.isLastImage) {
-        this.currentIndex++;
+        this.setImageIndex(this.currentIndex + 1)
       }
     },
     previousImage() {
       if (!this.isFirstImage) {
-        this.currentIndex--;
+        this.setImageIndex(this.currentIndex - 1);
       }
     },
     // Handle image click to navigate
@@ -103,17 +113,18 @@ export default {
       if (!this.ageInMonths || this.filteredImages.length === 0) return;
 
       let closestIndex = 0;
-      let minDiff = Math.abs(this.filteredImages[0].ageInMonths - this.ageInMonths);
+      let minDiff = Math.abs(this.filteredImages[0].boneAge - this.ageInMonths);
 
       this.filteredImages.forEach((image, index) => {
-        const diff = Math.abs(image.ageInMonths - this.ageInMonths);
+        const diff = Math.abs(image.boneAge - this.ageInMonths);
         if (diff < minDiff) {
           closestIndex = index;
           minDiff = diff;
+          console.log('Finding closest age:', image.boneAge);
         }
       });
 
-      this.currentIndex = closestIndex;
+      this.setImageIndex(closestIndex);
     }
   },
   watch: {

@@ -4,7 +4,7 @@ export const images = [
     src: "/images/female_000.jpg",
     text: "Female, age 0 years 0 months",
     gender: "female",
-    ageInMonths: 0,
+    boneAge: 0,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The distal ends of the proximal and middle phalanges are rounded and their proximal ends are wider and flat.</li></ul>" +
@@ -18,7 +18,7 @@ export const images = [
     src: "/images/female_003.jpg",
     text: "Female, age 0 years 3 months",
     gender: "female",
-    ageInMonths: 3,
+    boneAge: 3,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The phalanges have increased relatively more in length than in breadth and are beginning to show individual differentiation.</li></ul>" +
@@ -36,7 +36,7 @@ export const images = [
     src: "/images/female_006.jpg",
     text: "Female, age 0 years 6 months",
     gender: "female",
-    ageInMonths: 6,
+    boneAge: 6,
     interpretationNotes:
       "Metacarpals" +
       "<ul><li>There are now distinct individual differences in the shape and dimensions of the metacarpal shafts.</li>" +
@@ -48,7 +48,7 @@ export const images = [
     src: "/images/female_009.jpg",
     text: "Female, age 0 years 9 months",
     gender: "female",
-    ageInMonths: 9,
+    boneAge: 9,
     interpretationNotes:
       "Metacarpals" +
       "<ul><li>The base of the 2nd metacarpal has begun to enlarge.</ul>" +
@@ -59,7 +59,7 @@ export const images = [
     src: "/images/female_012.jpg",
     text: "Female, age 1 year 0 months",
     gender: "female",
-    ageInMonths: 12,
+    boneAge: 12,
     interpretationNotes:
       "Metacarpals" +
       "<ul><li>The capitate articular surface of the 2nd metacarpal has begun to flatten." +
@@ -73,7 +73,7 @@ export const images = [
     src: "/images/female_015.jpg",
     text: "Female, age 1 year 3 months",
     gender: "female",
-    ageInMonths: 15,
+    boneAge: 15,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Ossification in the epiphysis of the distal phalanx of the thumb has begun.</ul>" +
@@ -84,7 +84,7 @@ export const images = [
     src: "/images/female_018.jpg",
     text: "Female, age 1 year 6 months",
     gender: "female",
-    ageInMonths: 18,
+    boneAge: 18,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Ossification has begun in the epiphysis of the 5th proximal epiphysis." +
@@ -96,7 +96,7 @@ export const images = [
     src: "/images/female_024.jpg",
     text: "Female, age 2 years 0 months",
     gender: "female",
-    ageInMonths: 24,
+    boneAge: 24,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Ossification has begun in the epiphyses of the 3rd-5th distal phalanges." +
@@ -116,7 +116,7 @@ export const images = [
     src: "/images/female_030.jpg",
     text: "Female, age 2 years 6 months",
     gender: "female",
-    ageInMonths: 30,
+    boneAge: 30,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The distal margin of the epiphysis of the distal phalanx of the thumb has flattened to conform to the shape of the adjacent surface of its shaft." +
@@ -135,7 +135,7 @@ export const images = [
     src: "/images/female_036.jpg",
     text: "Female, age 3 years 0 months",
     gender: "female",
-    ageInMonths: 36,
+    boneAge: 36,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 2nd-4th middle phalanges are now slightly more than half as wide as their shafts.</ul>" +
@@ -149,7 +149,7 @@ export const images = [
     src: "/images/female_042.jpg",
     text: "Female, age 3 years 6 months",
     gender: "female",
-    ageInMonths: 42,
+    boneAge: 42,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The articular surfaces of the epiphyses of the 2nd and 3rd proximal phalanges have become slightly concave as they shape to the heads of the corresponding metacarpals.</ul>" +
@@ -164,7 +164,7 @@ export const images = [
     src: "/images/female_050.jpg",
     text: "Female, age 4 years 2 months",
     gender: "female",
-    ageInMonths: 50,
+    boneAge: 50,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 4th and 5th proximal phalanges are becoming slightly concave as they shape to the metacarpal heads.</ul>" +
@@ -178,7 +178,7 @@ export const images = [
     src: "/images/female_060.jpg",
     text: "Female, age 5 years 0 months",
     gender: "female",
-    ageInMonths: 60,
+    boneAge: 60,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 3rd-5th distal phalanges are now as wide as their shafts." +
@@ -198,7 +198,7 @@ export const images = [
     src: "/images/female_069.jpg",
     text: "Female, age 5 years 9 months",
     gender: "female",
-    ageInMonths: 69,
+    boneAge: 69,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphysis of the 3rd distal phalanx has shaped further to the contour of the trochlear surface of the middle phalanx.</ul>" +
@@ -211,7 +211,7 @@ export const images = [
     src: "/images/female_082.jpg",
     text: "Female, age 6 years 10 months",
     gender: "female",
-    ageInMonths: 82,
+    boneAge: 82,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphysis of the 5th middle phalanx is shaping to the contour of the trochlear surface of the proximal phalanx.</ul>" +
@@ -230,7 +230,7 @@ export const images = [
     src: "/images/female_094.jpg",
     text: "Female, age 7 years 10 months",
     gender: "female",
-    ageInMonths: 94,
+    boneAge: 94,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The articular surface of the epiphysis of the distal phalanx of the thumb has flattened somewhat." +
@@ -253,7 +253,7 @@ export const images = [
     src: "/images/female_106.jpg",
     text: "Female, age 8 years 10 months",
     gender: "female",
-    ageInMonths: 106,
+    boneAge: 106,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 2nd-4th proximal and middle phalanges are now as wide as their shafts.</ul>" +
@@ -272,7 +272,7 @@ export const images = [
     src: "/images/female_120.jpg",
     text: "Female, age 10 years 0 months",
     gender: "female",
-    ageInMonths: 120,
+    boneAge: 120,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The developing trochlear surfaces on the distal ends of the 2nd-4th proximal phalanges now have shallow central indentations." +
@@ -288,7 +288,7 @@ export const images = [
     src: "/images/female_132.jpg",
     text: "Female, age 11 years 0 months",
     gender: "female",
-    ageInMonths: 132,
+    boneAge: 132,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the proximal and middle phalanges of the 2nd-5th fingers and the distal phalanges of the thumb, 2nd, 4th, and 5th fingers now cap their shafts. This capping is more pronounced on the radial tips.</ul>" +
@@ -309,7 +309,7 @@ export const images = [
     src: "/images/female_144.jpg",
     text: "Female, age 12 years 0 months",
     gender: "female",
-    ageInMonths: 144,
+    boneAge: 144,
     interpretationNotes:
       "Carpals" +
       "<ul><li>The various articular surfaces of the capitate, hamate, trapezoid, and trapezium are now well-defined." +
@@ -324,7 +324,7 @@ export const images = [
     src: "/images/female_156.jpg",
     text: "Female, age 13 years 0 months",
     gender: "female",
-    ageInMonths: 156,
+    boneAge: 156,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphysis of the distal phalanx of the thumb has begun to fuse with its shaft.</ul>" +
@@ -339,7 +339,7 @@ export const images = [
     src: "/images/female_162.jpg",
     text: "Female, age 13 years 6 months",
     gender: "female",
-    ageInMonths: 162,
+    boneAge: 162,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of all distal phalanges are now fused with their shafts." +
@@ -351,7 +351,7 @@ export const images = [
     src: "/images/female_168.jpg",
     text: "Female, age 14 years 0 months",
     gender: "female",
-    ageInMonths: 168,
+    boneAge: 168,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Fusion is almost completed in the 2nd middle phalanx, and is well advanced in the 3rd-5th middle phalanges." +
@@ -366,7 +366,7 @@ export const images = [
     src: "/images/female_180.jpg",
     text: "Female, age 15 years 0 months",
     gender: "female",
-    ageInMonths: 180,
+    boneAge: 180,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Fusion is completed first in the distal, next in the proximal, and last in the middle phalanges of the 2nd-5th fingers.</ul>" +
@@ -379,7 +379,7 @@ export const images = [
     src: "/images/female_192.jpg",
     text: "Female, age 16 years 0 months",
     gender: "female",
-    ageInMonths: 192,
+    boneAge: 192,
     interpretationNotes:
       "Ulna" + "<ul><li>Fusion in the ulna is now almost complete.</ul>",
   },
@@ -387,7 +387,7 @@ export const images = [
     src: "/images/female_204.jpg",
     text: "Female, age 17 years 0 months",
     gender: "female",
-    ageInMonths: 204,
+    boneAge: 204,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyseal lines in the middle phalanges have been almost completely obliterated.</ul>" +
@@ -398,7 +398,7 @@ export const images = [
     src: "/images/female_216.jpg",
     text: "Female, age 18 years 0 months",
     gender: "female",
-    ageInMonths: 216,
+    boneAge: 216,
     interpretationNotes:
       "The hand is indistinguishable from that of a young adult. Traces of some epiphyseal lines of fusion can still be seen and may persist throughout life.",
   },
@@ -406,7 +406,7 @@ export const images = [
     src: "/images/male_000.jpg",
     text: "Male, age 0 years 0 months",
     gender: "male",
-    ageInMonths: 0,
+    boneAge: 0,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The distal ends of the proximal and middle phalanges are rounded and their proximal ends are wider and flat.</li></ul>" +
@@ -420,7 +420,7 @@ export const images = [
     src: "/images/male_003.jpg",
     text: "Male, age 0 years 3 months",
     gender: "male",
-    ageInMonths: 3,
+    boneAge: 3,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The phalanges have increased relatively more in length than in breadth and are beginning to show individual differentiation.</li></ul>" +
@@ -438,7 +438,7 @@ export const images = [
     src: "/images/male_006.jpg",
     text: "Male, age 0 years 6 months",
     gender: "male",
-    ageInMonths: 6,
+    boneAge: 6,
     interpretationNotes:
       "Metacarpals" +
       "<ul><li>There are now distinct individual differences in the shape and dimensions of the metacarpal shafts.</li></ul>" +
@@ -452,7 +452,7 @@ export const images = [
     src: "/images/male_009.jpg",
     text: "Male, age 0 years 9 months",
     gender: "male",
-    ageInMonths: 9,
+    boneAge: 9,
     interpretationNotes:
       "Metacarpals" +
       "<ul><li>The distal 1st metacarpal and bases of the 2nd-5th metacarpals have become relatively larger and more rounded.</li></ul>" +
@@ -463,7 +463,7 @@ export const images = [
     src: "/images/male_012.jpg",
     text: "Male, age 1 year 0 months",
     gender: "male",
-    ageInMonths: 12,
+    boneAge: 12,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The proximal phalanges have grown somewhat more in length than width and the distal tips of the 3rd and 4th appear to be slightly compressed laterally.</li></ul>" +
@@ -474,7 +474,7 @@ export const images = [
     src: "/images/male_015.jpg",
     text: "Male, age 1 year 3 months",
     gender: "male",
-    ageInMonths: 15,
+    boneAge: 15,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The sides of the distal ends of the 3rd and 4th proximal phalanges are now somewhat flattened. The trochlear surface of each phalanx will form later between and immediately distal to those flattened areas.</ul></li>" +
@@ -489,7 +489,7 @@ export const images = [
     src: "/images/male_018.jpg",
     text: "Male, age 1 year 6 months",
     gender: "male",
-    ageInMonths: 18,
+    boneAge: 18,
     interpretationNotes:
       "Phalanges and Metacarpals" +
       "<ul><li>Ossification centers are now visible in the 2nd-5th metacarpal heads and proximal phalanges, and in the distal phalanx of the thumb.</li>" +
@@ -502,7 +502,7 @@ export const images = [
     src: "/images/male_024.jpg",
     text: "Male, age 2 years 0 months",
     gender: "male",
-    ageInMonths: 24,
+    boneAge: 24,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Ossification has now begun in the epiphysis of the 5th proximal phalanx, and 3rd and 4th middle and distal phalanges.</li>" +
@@ -512,7 +512,7 @@ export const images = [
     src: "/images/male_032.jpg",
     text: "Male, age 2 years 8 months",
     gender: "male",
-    ageInMonths: 32,
+    boneAge: 32,
     interpretationNotes:
       "Phalanges and Metacarpals" +
       "<ul><li>Ossification centers are now visible in the proximal phalanx of the thumb, 2nd middle phalanx, 2nd and 5th distal phalanges, and 1st metacarpal.</li>" +
@@ -523,7 +523,7 @@ export const images = [
     src: "/images/male_036.jpg",
     text: "Male, age 3 years 0 months",
     gender: "male",
-    ageInMonths: 36,
+    boneAge: 36,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 2nd-4th middle phalanges have widened transversely to form disc-like structures which are thickest in the middle and taper toward each end. Their margins are smooth.</ul></li>" +
@@ -536,7 +536,7 @@ export const images = [
     src: "/images/male_042.jpg",
     text: "Male, age 3 years 6 months",
     gender: "male",
-    ageInMonths: 42,
+    boneAge: 42,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 2nd and 5th distal phalanges are now clearly visible.</li>" +
@@ -551,7 +551,7 @@ export const images = [
     src: "/images/male_048.jpg",
     text: "Male, age 4 years 0 months",
     gender: "male",
-    ageInMonths: 48,
+    boneAge: 48,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Ossification centers are now present in all of the phalangeal epiphyses.</li>" +
@@ -561,7 +561,7 @@ export const images = [
     src: "/images/male_054.jpg",
     text: "Male, age 4 years 6 months",
     gender: "male",
-    ageInMonths: 54,
+    boneAge: 54,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The articular surfaces of the 2nd and 3rd proximal phalangeal epiphyses have become slightly concave as they begin to shape to the heads of the corresponding metacarpals.</li>" +
@@ -577,7 +577,7 @@ export const images = [
     src: "/images/male_060.jpg",
     text: "Male, age 5 years 0 months",
     gender: "male",
-    ageInMonths: 60,
+    boneAge: 60,
     interpretationNotes:
       "Phalanges" +
       '<ul><li>The partial flexion of the fingers in this standard makes it impossible to compare the amount of reduction which has taken place in the size of the inter-phalangeal spaces since the previous standard. The epiphysis of the distal phalanx of the fifth finger is now about two-thirds as wide as its shaft.</li></ul>"' +
@@ -590,7 +590,7 @@ export const images = [
     src: "/images/male_072.jpg",
     text: "Male, age 6 years 0 months",
     gender: "male",
-    ageInMonths: 72,
+    boneAge: 72,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the proximal phalanges are not yet as wide as the adjacent borders of their shafts.</li>" +
@@ -608,7 +608,7 @@ export const images = [
     src: "/images/male_084.jpg",
     text: "Male, age 7 years 0 months",
     gender: "male",
-    ageInMonths: 84,
+    boneAge: 84,
     interpretationNotes:
       "Metacarpals" +
       "<ul><li>The proximal margin of the epiphysis of the 1st metacarpal is distinctly flattened.</li></ul>" +
@@ -622,7 +622,7 @@ export const images = [
     src: "/images/male_096.jpg",
     text: "Male, age 8 years 0 months",
     gender: "male",
-    ageInMonths: 96,
+    boneAge: 96,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 2nd-5th distal phalanges are now as wide as their shafts.</li>" +
@@ -634,7 +634,7 @@ export const images = [
     src: "/images/male_108.jpg",
     text: "Male, age 9 years 0 months",
     gender: "male",
-    ageInMonths: 108,
+    boneAge: 108,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The distal ends of the shafts of the 2nd and 3rd proximal phalanges have become slightly concave as their trochlear surfaces begin to differentiate.</li></ul>" +
@@ -649,7 +649,7 @@ export const images = [
     src: "/images/male_120.jpg",
     text: "Male, age 10 years 0 months",
     gender: "male",
-    ageInMonths: 120,
+    boneAge: 120,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The more proximal part of the articular surface of the distal phalanx of the thumb is now slightly concave." +
@@ -667,7 +667,7 @@ export const images = [
     src: "/images/male_132.jpg",
     text: "Male, age 11 years 0 months",
     gender: "male",
-    ageInMonths: 132,
+    boneAge: 132,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphysis of the 2nd proximal phalanx is now as wide as its shaft." +
@@ -685,7 +685,7 @@ export const images = [
     src: "/images/male_138.jpg",
     text: "Male, age 11 years 6 months",
     gender: "male",
-    ageInMonths: 138,
+    boneAge: 138,
     interpretationNotes:
       "Carpals" +
       "<ul><li>The carpals are now somewhat larger, the spaces between them somewhat reduced, with more reciprocal shaping between carpal bones and one another, metacarpals, and radius and ulna.</li>" +
@@ -699,7 +699,7 @@ export const images = [
     src: "/images/male_150.jpg",
     text: "Male, age 12 years 6 months",
     gender: "male",
-    ageInMonths: 150,
+    boneAge: 150,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphyses of the 3rd-5th proximal phalanges are now as wide as their shafts.</li></ul>" +
@@ -710,7 +710,7 @@ export const images = [
     src: "/images/male_156.jpg",
     text: "Male, age 13 years 0 months",
     gender: "male",
-    ageInMonths: 156,
+    boneAge: 156,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The epiphysis of the 5th middle phalanx is now as wide as its shaft." +
@@ -724,7 +724,7 @@ export const images = [
     src: "/images/male_162.jpg",
     text: "Male, age 13 years 6 months",
     gender: "male",
-    ageInMonths: 162,
+    boneAge: 162,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>All of the proximal epiphyses have begun to cap their shafts. The process has advanced farthest in the thumb and in the 3rd-5th fingers, and moreso on the radial sides.</li></ul>" +
@@ -743,7 +743,7 @@ export const images = [
     src: "/images/male_168.jpg",
     text: "Male, age 14 years 0 months",
     gender: "male",
-    ageInMonths: 168,
+    boneAge: 168,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>The sides of the epiphyses of the 2nd-5th metacarpals are now aligned closely with the sides of their shafts." +
@@ -758,7 +758,7 @@ export const images = [
     src: "/images/male_180.jpg",
     text: "Male, age 15 years 0 months",
     gender: "male",
-    ageInMonths: 180,
+    boneAge: 180,
     interpretationNotes:
       "Carpals" +
       "<ul><li>All carpals have now attained their early adult shape.</ul>" +
@@ -775,7 +775,7 @@ export const images = [
     src: "/images/male_186.jpg",
     text: "Male, age 15 years 6 months",
     gender: "male",
-    ageInMonths: 186,
+    boneAge: 186,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Epiphyseal fusion has recently been completed in all of the distal phalanges.</ul>" +
@@ -790,7 +790,7 @@ export const images = [
     src: "/images/male_192.jpg",
     text: "Male, age 16 years 0 months",
     gender: "male",
-    ageInMonths: 192,
+    boneAge: 192,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>Epiphyseal-diaphyseal fusion is well advanced in all the proximal phalanges and in the middle phalanges of the 2nd and 5th fingers." +
@@ -802,7 +802,7 @@ export const images = [
     src: "/images/male_204.jpg",
     text: "Male, age 17 years 0 months",
     gender: "male",
-    ageInMonths: 204,
+    boneAge: 204,
     interpretationNotes:
       "Phalanges" +
       "<ul><li>All of the phalangeal epiphyses have now fused with their shafts.</ul>" +
@@ -815,7 +815,7 @@ export const images = [
     src: "/images/male_216.jpg",
     text: "Male, age 18 years 0 months",
     gender: "male",
-    ageInMonths: 216,
+    boneAge: 216,
     interpretationNotes:
       "<ul><li>All the epiphyses except that of the radius have fused with their shafts.</ul>",
   },
@@ -823,7 +823,7 @@ export const images = [
     src: "/images/male_228.jpg",
     text: "Male, age 19 years 0 months",
     gender: "male",
-    ageInMonths: 228,
+    boneAge: 228,
     interpretationNotes:
       "<ul><li>The radial epiphysis has now fused with its shaft, completing the skeletal maturation of the hand and wrist.</ul>",
   },

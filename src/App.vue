@@ -8,7 +8,7 @@
       <!-- Clinical Panel and Image Display -->
       <div class="clinical-panel-container">
         <ClinicalPanel
-          :currentImageAge="currentImage.ageInMonths"
+          :boneAge="boneAge || 0"
           @update-report="handleReportUpdate"
         />
       </div>
@@ -16,8 +16,9 @@
         <ImageDisplay
           :selectedGender="report.gender || 'male'"
           :ageInMonths="report.ageInMonths || 0"
-          @update-image="updateCurrentImage"
-        />
+          @update-bone-age="updateBoneAge"
+
+/>
       </div>
     </div>
   </div>
@@ -40,11 +41,9 @@ export default {
         gender: 'male',  // Default to Male
         birthDate: '',
         imagingDate: '',
-        ageInMonths: 0,  // Calculated age in months
+        ageInMonths: 0,  // Calculated age in months,
       },
-      currentImage: {
-        ageInMonths: 0  // Default to 0
-      }
+      boneAge: 0 // Bone Age of current image
     };
   },
   methods: {
@@ -57,9 +56,9 @@ export default {
         this.report.ageInMonths = this.calculateAgeInMonths(this.report.birthDate, this.report.imagingDate);
       }
     },
-    updateCurrentImage(imageData) {
-      console.log('Updating current image:', imageData);
-      this.currentImage = imageData;  // Update currentImage with the selected image data
+    updateBoneAge(boneAge) {
+      console.log('Updating bone age:', boneAge);
+      this.boneAge = boneAge;  // Update bone age from selected image
     },
     calculateAgeInMonths(birthDate, imagingDate) {
       const birth = new Date(birthDate);

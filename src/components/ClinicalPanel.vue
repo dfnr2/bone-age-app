@@ -38,7 +38,7 @@
       <p>Birth Date: {{ birthDate }}</p>
       <p>Imaging Date: {{ imagingDate }}</p>
       <p>Age in Months: {{ ageInMonths }}</p>
-      <p>Current Image Age: {{ currentImageAge }} months</p>
+      <p>Bone Age: {{ this.boneAge }} months</p>
     </div>
   </div>
 </template>
@@ -46,9 +46,9 @@
 <script>
 export default {
   props: {
-    currentImageAge: {   // Receive the current image's age from the parent component
+    boneAge: {   // Receive the current image's age from the parent component
       type: Number,
-      default: 0
+      // default: 0
     }
   },
   data() {
@@ -109,6 +109,9 @@ export default {
     },
     imagingDate() {
       this.updateReport();  // Ensure imagingDate change triggers report update
+    },
+    boneAge() {
+      console.log('New Age', this.boneAge);
     }
   }
 }
