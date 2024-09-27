@@ -1,34 +1,39 @@
 <template>
-  <div class="image-display">
-    <!-- Image Content -->
-    <div
-      class="image-content"
-      @click="handleImageClick"
-      @mousedown.prevent="startDrag"
-      @mousemove="onDrag"
-      @mouseup="endDrag"
-      @wheel.prevent="handleWheel"
-      tabindex="0"
-      @keydown.enter="handleImageClick"
-      aria-label="Bone Age Image Container"
-    >
-      <img
-        :src="currentImage.src"
-        alt="Bone Age Image"
-        loading="lazy"
-        aria-label="Bone Age Image"
-      />
-      <div class="image-text">{{ currentImage.text }}</div>
-    </div>
-
-    <!-- Interpretation Notes -->
-    <div class="interpretation-notes">
-      <h3>Interpretation Notes</h3>
+  <div class="image-display"
+    @keydown="handleKeyPress"
+    tabindex="0"
+  >
+    <div class="image-display">
+      <!-- Image Content -->
       <div
-        v-if="currentImage.interpretationNotes"
-        v-html="currentImage.interpretationNotes"
-      ></div>
-      <div v-else>No interpretation notes available.</div>
+        class="image-content"
+        @click="handleImageClick"
+        @mousedown.prevent="startDrag"
+        @mousemove="onDrag"
+        @mouseup="endDrag"
+        @wheel.prevent="handleWheel"
+        tabindex="0"
+        @keydown.enter="handleImageClick"
+        aria-label="Bone Age Image Container"
+      >
+        <img
+          :src="currentImage.src"
+          alt="Bone Age Image"
+          loading="lazy"
+          aria-label="Bone Age Image"
+        />
+        <div class="image-text">{{ currentImage.text }}</div>
+      </div>
+
+      <!-- Interpretation Notes -->
+      <div class="interpretation-notes">
+        <h3>Interpretation Notes</h3>
+        <div
+          v-if="currentImage.interpretationNotes"
+          v-html="currentImage.interpretationNotes"
+        ></div>
+        <div v-else>No interpretation notes available.</div>
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +89,7 @@ export default {
      * @returns {number} - Index of the closest image
      */
     const binarySearchClosest = (arr, target) => {
+      console.log('searching for bone age:', target)
       let left = 0;
       let right = arr.length - 1;
 
@@ -174,14 +180,30 @@ export default {
       isDragging.value = false;
     };
 
-    // Method: Handle Keyboard Navigation
-    const handleKeyPress = (event) => {
+      const handleKeyPress = (event) => {
+      const activeElement = document.activeElement;
+      const activeTag = activeElement.tagName.toLowerCase();
+
+      // If an input field, textarea, or contenteditable element is focused, do not navigate images
+      if (
+        activeTag === 'input' ||
+        activeTag === 'textarea' ||
+        activeTag === 'select' ||
+        activeElement.isContentEditable
+      ) {
+        return; // Exit the function without handling the key press
+      }
+
+      // Handle left and right arrow keys
       if (event.key === 'ArrowRight') {
+        event.preventDefault();
         nextImage();
       } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
         previousImage();
       }
     };
+
 
     /**
      * Update to the Closest Image Based on Age in Months using Binary Search
@@ -237,7 +259,6 @@ export default {
 
     onBeforeUnmount(() => {
       window.removeEventListener('keydown', handleKeyPress);
-      debouncedHandleWheel.cancel(); // Cancel any pending debounced calls
     });
 
     // Return Variables and Methods to Template
@@ -277,6 +298,10 @@ export default {
   width: 100%;
   height: auto;
   border-radius: 8px;
+}
+
+.image-display:focus {
+  outline: 2px solid #007BFF; /* Or any other focus indicator */
 }
 
 .image-text {

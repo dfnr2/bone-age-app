@@ -24,12 +24,16 @@
     </div>
 
     <!-- Birth Date Selector -->
-    <label for="birth-date">Birth Date:</label>
-    <input type="date" v-model="birthDate" @change="updateReport" />
+    <div class="form-group">
+      <label for="birthDate">Birth Date</label>
+      <input type="date" id="birthDate" v-model="birthDate" @change="updateReport" />
+    </div>
 
     <!-- Imaging Date Selector -->
-    <label for="imaging-date">Imaging Date:</label>
-    <input type="date" v-model="imagingDate" @change="updateReport" />
+    <div class="form-group">
+      <label for="imaging-date">Imaging Date:</label>
+      <input type="date" v-model="imagingDate" @change="updateReport" />
+    </div>
 
     <!-- Report Display -->
     <div class="report">
@@ -58,7 +62,7 @@ export default {
   setup(props, { emit }) {
     // Reactive State
     const selectedGender = ref('male');
-    const birthDate = ref('');
+    const birthDate = ref(getLocalDate());
     const imagingDate = ref(getLocalDate());
 
     // Helper Function to Get Today's Date in YYYY-MM-DD Format
@@ -106,7 +110,7 @@ export default {
 
     // Method to Reset Dates to Default Values
     const resetDates = () => {
-      birthDate.value = ''; // Reset birth date to unset
+      birthDate.value = getLocalDate(); // Reset birth date to unset
       imagingDate.value = getLocalDate(); // Reset imaging date to today's date
       updateReport(); // Emit updated report
     };
@@ -223,5 +227,27 @@ input {
   background-color: #444;
   color: white;
   border-radius: 5px;
+}
+
+.form-group {
+  display: inline-flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+/* Adjust label and input styles if necessary */
+.form-group label {
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  /* Existing input styles */
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>
