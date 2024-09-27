@@ -2,19 +2,26 @@
   <div class="image-container">
     <!-- Image and Interpretation Panel -->
     <div class="image-and-notes">
-      <!-- Image Display with click handling -->
+      <!-- Image Display with click, keyboard, and scroll handling -->
       <div
         class="image-content"
         @click="handleImageClick"
         @mousedown.prevent="startDrag"
         @mousemove="onDrag"
         @mouseup="endDrag"
+        @wheel.prevent="handleWheel"
+        tabindex="0"
+        @keydown.enter="handleImageClick"
+        aria-label="Bone Age Image Container"
       >
-        <img :src="currentImage.src" alt="Bone Age Image" loading="lazy" />
+        <img
+          :src="currentImage.src"
+          alt="Bone Age Image"
+          loading="lazy"
+          aria-label="Bone Age Image"
+        />
         <div class="image-text">{{ currentImage.text }}</div>
       </div>
-
-      <!-- Interpretation Notes Panel -->
       <div class="interpretation-notes">
         <h3>Interpretation Notes</h3>
         <div v-if="currentImage.interpretationNotes" v-html="currentImage.interpretationNotes"></div>
@@ -26,7 +33,8 @@
 
 <script>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
-import { images } from '@/data/images.js'; // Correct Named Import
+import { images } from '@/data/images.js'; // Named Export
+import debounce from 'lodash/debounce'; // Import debounce from lodash
 
 export default {
   name: 'ImageDisplay',
@@ -46,6 +54,7 @@ export default {
     const currentIndex = ref(0);
     const isDragging = ref(false);
     const startX = ref(0);
+    const debounceDelay = 25; // msec
 
     // Computed Property: Filtered Images Based on Selected Gender
     const filteredImages = computed(() => {
@@ -65,13 +74,50 @@ export default {
     const isFirstImage = computed(() => currentIndex.value === 0);
     const isLastImage = computed(() => currentIndex.value === filteredImages.value.length - 1);
 
+    /**
+     * Binary Search Function to Find the Closest boneAge
+     * Assumes that filteredImages is sorted in ascending order by boneAge
+     * @param {Array} arr - Array of image objects
+     * @param {number} target - Patient's age in months
+     * @returns {number} - Index of the closest image
+     */
+    const binarySearchClosest = (arr, target) => {
+      let left = 0;
+      let right = arr.length - 1;
+
+      if (arr.length === 0) return -1;
+      if (target < arr[0].boneAge) return 0;
+      if (target > arr[right].boneAge) return right;
+
+      while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        if (arr[mid].boneAge === target) {
+          return mid;
+        } else if (arr[mid].boneAge < target) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+
+      // After loop, left is the insertion point
+      // Compare arr[left] and arr[left -1] to find closest
+      if (left >= arr.length) return arr.length - 1;
+      if (left === 0) return 0;
+      const prev = arr[left - 1];
+      const next = arr[left];
+      return Math.abs(prev.boneAge - target) <= Math.abs(next.boneAge - target)
+        ? left - 1
+        : left;
+    };
+
     // Method: Set Image Index and Emit Bone Age
     const setImageIndex = (newImageIndex) => {
       if (newImageIndex < 0 || newImageIndex >= filteredImages.value.length) return;
       currentIndex.value = newImageIndex;
-      const boneAge = filteredImages.value[currentIndex.value].boneAge; // Correct Property
+      const boneAge = filteredImages.value[currentIndex.value].boneAge;
       console.log('Setting new bone age to:', boneAge);
-      emit('update-bone-age', boneAge); // Emit Correct Event
+      emit('update-bone-age', boneAge);
       console.log('Emitting update-bone-age with:', boneAge);
     };
 
@@ -135,23 +181,32 @@ export default {
       }
     };
 
-    // Method: Update to the Closest Image Based on Age in Months
+    /**
+     * Update to the Closest Image Based on Age in Months using Binary Search
+     */
     const updateClosestImage = () => {
       if (!props.ageInMonths || filteredImages.value.length === 0) return;
 
-      let closestIndex = 0;
-      let minDiff = Math.abs(filteredImages.value[0].boneAge - props.ageInMonths);
-
-      filteredImages.value.forEach((image, index) => {
-        const diff = Math.abs(image.boneAge - props.ageInMonths);
-        if (diff < minDiff) {
-          closestIndex = index;
-          minDiff = diff;
-          console.log('Finding closest bone age:', image.boneAge);
-        }
-      });
-
+      const closestIndex = binarySearchClosest(filteredImages.value, props.ageInMonths);
+      console.log('Closest index found:', closestIndex);
       setImageIndex(closestIndex);
+    };
+
+    // Debounce the scroll handler to prevent rapid navigation
+    const debouncedHandleWheel = debounce((event) => {
+      const { deltaY } = event;
+      if (deltaY > 0) {
+        // Scrolling down
+        nextImage();
+      } else if (deltaY < 0) {
+        // Scrolling up
+        previousImage();
+      }
+    }, debounceDelay); // Adjust the delay (ms) as needed
+
+    // Method: Handle Wheel Event for Navigation
+    const handleWheel = (event) => {
+      debouncedHandleWheel(event);
     };
 
     // Watchers: Update Closest Image When Age or Gender Changes
@@ -180,6 +235,7 @@ export default {
 
     onBeforeUnmount(() => {
       window.removeEventListener('keydown', handleKeyPress);
+      debouncedHandleWheel.cancel(); // Cancel any pending debounced calls
     });
 
     // Return Variables and Methods to Template
@@ -192,6 +248,7 @@ export default {
       startDrag,
       onDrag,
       endDrag,
+      handleWheel, // Expose handleWheel to template
     };
   },
 };

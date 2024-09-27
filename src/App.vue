@@ -19,16 +19,6 @@
           @update-bone-age="handleImageAgeUpdate" />
       </div>
     </div>
-
-    <!-- Optional Report Section for Debugging -->
-    <div class="report-section">
-      <h2>Report</h2>
-      <p><strong>Gender:</strong> {{ report.gender }}</p>
-      <p><strong>Birth Date:</strong> {{ formattedBirthDate }}</p>
-      <p><strong>Imaging Date:</strong> {{ formattedImagingDate }}</p>
-      <p><strong>Age in Months:</strong> {{ report.ageInMonths }}</p>
-      <p><strong>Bone Age:</strong> {{ report.boneAge }} months</p>
-    </div>
   </div>
 </template>
 
