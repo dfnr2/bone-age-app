@@ -35,20 +35,24 @@
       <input type="date" v-model="imagingDate" @change="updateReport" />
     </div>
 
-    <!-- Report Display -->
-    <div class="report">
-      <h3>Report Data</h3>
-      <p>Gender: {{ selectedGender }}</p>
-      <p>Birth Date: {{ birthDate }}</p>
-      <p>Imaging Date: {{ imagingDate }}</p>
-      <p>Age in Months: {{ ageInMonths }}</p>
-      <p>Bone Age: {{ boneAge }} months</p>
+    <!-- Report Section -->
+    <div class="report-section">
+      <label for="report">Report:</label>
+      <div
+        id="report"
+        v-html="renderedReport"
+        class="report-textbox"
+        aria-readonly="true"
+      ></div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref, computed, watch } from 'vue';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+import { getStandardDeviation  } from '@/data/BrushFoundationData.js';
 
 export default {
   name: 'ClinicalPanel',
@@ -132,7 +136,67 @@ export default {
       }
     );
 
-    // Return Variables and Methods to Template
+    // Create the report markdown
+    const reportMarkdown = computed(() => {
+
+      let stdDevForAge = 'N/A';
+      let twoStdDev = 'N/A';
+      let lowerRange = 'N/A';
+      let upperRange = 'N/A';
+      let conclusion = 'N/A';
+
+      const genderCapitalized = selectedGender.value.charAt(0).toUpperCase() + selectedGender.value.slice(1);
+      const boneAgeMonths = props.boneAge || 'N/A';
+      if (ageInMonths.value !== 'N/A' && selectedGender.value) {
+        stdDevForAge = getStandardDeviation(selectedGender.value, ageInMonths.value);
+
+        twoStdDev = (2 * stdDevForAge).toFixed(2);
+        lowerRange = (ageInMonths.value - 2 * stdDevForAge).toFixed(2);
+        upperRange = (ageInMonths.value+ 2 * stdDevForAge).toFixed(2);
+
+        if (boneAgeMonths < lowerRange) {
+          const excursion = (ageInMonths.value - boneAgeMonths) / stdDevForAge;
+          conclusion = `*Delayed* bone age, ${excursion} below the mean for chronological age.`;
+        } else if (boneAgeMonths > upperRange) {
+          const excursion = (boneAgeMonths - ageInMonths.value) / stdDevForAge;
+          conclusion = `*Advanced* bone age, ${excursion} above the mean for chronological age.`;
+        } else {
+          conclusion = 'Normal bone age, within two standard deviations of the mean for chronological age.';
+        }
+
+      }
+      const clinicalReport = `**EXAM**: X-RAY BONE AGE STUDY
+
+**HISTORY**: Short Stature
+
+**TECHNIQUE**: A single frontal view of the LEFT hand was obtained. Bone age was determined according to the method of Greulich and Pyle.
+
+**COMPARISON**: None available.
+
+**FINDINGS**:
+
+- **Gender**: ${genderCapitalized}
+- **Chronological age**: ${ageInMonths.value} months
+- **Bone Age (estimated by the method of Greulich and Pyle)**: ${boneAgeMonths} months
+- **Standard Deviation for age**: ${stdDevForAge} months. (Based on the closest chronological age and gender group in the Brush Foundation data set). Two standard deviations at this age is ${twoStdDev} months, giving a normal range of ${lowerRange} to ${upperRange} (+/- 2 standard deviations).
+
+**IMPRESSION**:
+
+1. ${conclusion}
+
+End of report
+`;
+
+
+    return clinicalReport
+    });
+
+    // Render the markdown to HTML
+    const renderedReport = computed(() => {
+      const rawHTML = marked(reportMarkdown.value);
+      return DOMPurify.sanitize(rawHTML);
+    });
+
     return {
       selectedGender,
       birthDate,
@@ -141,6 +205,7 @@ export default {
       setGender,
       updateReport,
       resetDates,
+      renderedReport,
     };
   },
 };
@@ -249,5 +314,17 @@ input {
   border-radius: 5px;
   width: 100%;
   box-sizing: border-box;
+}
+
+.report-textbox {
+  border: 1px solid #ccc;
+  padding: 8px;
+  min-height: 150px;
+  overflow-y: auto;
+  background-color: #333333;
+  color: white;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
 }
 </style>
