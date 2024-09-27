@@ -30,7 +30,7 @@
         <h3>Interpretation Notes</h3>
         <div
           v-if="currentImage.interpretationNotes"
-          v-html="currentImage.interpretationNotes"
+          v-html="renderedNotes"
         ></div>
         <div v-else>No interpretation notes available.</div>
       </div>
@@ -40,7 +40,9 @@
 
 <script>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
-import { images } from '@/data/images.js'; // Named Export
+import { marked } from 'marked' // marked is a lightweight markdown rendering engine
+import DOMPurify from 'dompurify'; // To sanitize rendered HTML
+import { images } from '@/data/images.js'; // static image data
 import debounce from 'lodash/debounce'; // Import debounce from lodash
 
 export default {
@@ -62,6 +64,13 @@ export default {
     const isDragging = ref(false);
     const startX = ref(0);
     const debounceDelay = 25; // msec
+
+    // Computed Property: Age-specific Interpretation notes based on selected image
+    const renderedNotes = computed(() => {
+      const rawMarkdown = currentImage.value.interpretationNotes || '';
+      const rawHTML = marked(rawMarkdown);
+      return DOMPurify.sanitize(rawHTML); // Sanitize the HTML output
+    });
 
     // Computed Property: Filtered Images Based on Selected Gender
     const filteredImages = computed(() => {
@@ -272,6 +281,7 @@ export default {
       onDrag,
       endDrag,
       handleWheel, // Expose handleWheel to template
+      renderedNotes,
     };
   },
 };
