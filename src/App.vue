@@ -5,18 +5,21 @@
 
     <!-- Main Content -->
     <div class="main-container">
-      <!-- Clinical Panel and Image Display -->
+      <!-- Clinical Panel -->
       <div class="clinical-panel-container">
         <ClinicalPanel
           :boneAge="report.boneAge"
           @update-report="handleReportUpdate"
         />
       </div>
+
+      <!-- Image Display -->
       <div class="image-display-container">
         <ImageDisplay
           :selectedGender="report.gender || 'male'"
           :ageInMonths="report.ageInMonths || 0"
-          @update-bone-age="handleImageAgeUpdate" />
+          @update-bone-age="handleImageAgeUpdate"
+        />
       </div>
     </div>
   </div>
@@ -106,6 +109,10 @@ export default {
 </script>
 
 <style>
+:root {
+  --breakpoint-width: 720px; /* Configurable breakpoint */
+}
+
 #app {
   background-color: #121212;
   color: #ffffff;
@@ -122,33 +129,29 @@ h1 {
 
 .main-container {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: nowrap;
   gap: 20px;
 }
 
 .clinical-panel-container {
-  flex: 1;
+  flex: 1 1 33%;
 }
 
 .image-display-container {
-  flex: 3;
+  flex: 1 1 66%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
-.report-section {
-  margin-top: 30px;
-  padding: 15px;
-  background-color: #1e1e1e;
-  border-radius: 8px;
-}
+/* Adjusted Layout Below Breakpoint */
+@media (max-width: var(--breakpoint-width)) {
+  .main-container {
+    flex-direction: column;
+  }
 
-.report-section h2 {
-  margin-bottom: 10px;
-}
-
-.report-section p {
-  margin: 5px 0;
+  .clinical-panel-container,
+  .image-display-container {
+    flex: 1 1 100%;
+  }
 }
 </style>

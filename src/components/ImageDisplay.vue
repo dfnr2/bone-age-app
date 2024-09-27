@@ -1,32 +1,34 @@
 <template>
-  <div class="image-container">
-    <!-- Image and Interpretation Panel -->
-    <div class="image-and-notes">
-      <!-- Image Display with click, keyboard, and scroll handling -->
+  <div class="image-display">
+    <!-- Image Content -->
+    <div
+      class="image-content"
+      @click="handleImageClick"
+      @mousedown.prevent="startDrag"
+      @mousemove="onDrag"
+      @mouseup="endDrag"
+      @wheel.prevent="handleWheel"
+      tabindex="0"
+      @keydown.enter="handleImageClick"
+      aria-label="Bone Age Image Container"
+    >
+      <img
+        :src="currentImage.src"
+        alt="Bone Age Image"
+        loading="lazy"
+        aria-label="Bone Age Image"
+      />
+      <div class="image-text">{{ currentImage.text }}</div>
+    </div>
+
+    <!-- Interpretation Notes -->
+    <div class="interpretation-notes">
+      <h3>Interpretation Notes</h3>
       <div
-        class="image-content"
-        @click="handleImageClick"
-        @mousedown.prevent="startDrag"
-        @mousemove="onDrag"
-        @mouseup="endDrag"
-        @wheel.prevent="handleWheel"
-        tabindex="0"
-        @keydown.enter="handleImageClick"
-        aria-label="Bone Age Image Container"
-      >
-        <img
-          :src="currentImage.src"
-          alt="Bone Age Image"
-          loading="lazy"
-          aria-label="Bone Age Image"
-        />
-        <div class="image-text">{{ currentImage.text }}</div>
-      </div>
-      <div class="interpretation-notes">
-        <h3>Interpretation Notes</h3>
-        <div v-if="currentImage.interpretationNotes" v-html="currentImage.interpretationNotes"></div>
-        <div v-else>No interpretation notes available.</div>
-      </div>
+        v-if="currentImage.interpretationNotes"
+        v-html="currentImage.interpretationNotes"
+      ></div>
+      <div v-else>No interpretation notes available.</div>
     </div>
   </div>
 </template>
@@ -255,32 +257,24 @@ export default {
 </script>
 
 <style scoped>
-.image-container {
+.image-display {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #1e1e1e;
-  color: white;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.image-and-notes {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  flex-wrap: nowrap;
+  gap: 20px;
 }
 
 .image-content {
+  flex: 1 1 50%;
+  max-width: 100%;
+  min-width: 240px; /* Minimum image width (60% of original image width) */
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer; /* Indicates the image is clickable */
-  position: relative;
+  cursor: pointer;
 }
 
 .image-content img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
   border-radius: 8px;
 }
@@ -291,20 +285,18 @@ export default {
 }
 
 .interpretation-notes {
-  width: 30%;
+  flex: 1 1 50%;
   padding: 20px;
   background-color: #333;
   color: white;
-  margin-left: 20px;
   border-radius: 8px;
+  overflow-y: auto;
 }
 
-.interpretation-notes h3 {
-  margin-bottom: 10px;
-}
-
-.interpretation-notes ul {
-  list-style-type: disc;
-  padding-left: 20px;
+/* Ensure image and notes stay side by side above breakpoint */
+@media (max-width: var(--breakpoint-width)) {
+  .image-display {
+    flex-direction: row;
+  }
 }
 </style>

@@ -1,0 +1,279 @@
+#+TITLE: Greulich and Pyle Bone Age Calculator App Specification
+#+AUTHOR: Assistant
+#+DATE: 2024-09-27
+#+OPTIONS: toc:t
+
+* Version: 1.3
+* Platform: Vue.js (v3)
+
+* Introduction
+
+The Greulich and Pyle Bone Age Calculator is a single-page Vue.js application designed to assist radiologists in determining if a patient's bone age is delayed, normal, or advanced. The application allows radiologists to input patient demographics and compare the patient's radiograph with standardized bone age images. By selecting the image that most closely matches the patient's radiograph, the radiologist can assess the bone age relative to the patient's chronological age.
+
+---
+
+* App Structure
+
+The application comprises two main components:
+
+1. *Clinical Panel (ClinicalPanel.vue)*: Handles patient demographic input and displays calculated patient age and bone age results.
+
+2. *Image Display (ImageDisplay.vue)*: Displays standardized bone age images based on selected gender and allows navigation between images. This component also includes the interpretation notes for the current image.
+
+These components interact through a parent component (*App.vue*), which manages shared state and data flow.
+
+---
+
+* Terminology Clarification
+
+- *ageInMonths*: Represents the **patient's chronological age** in months, calculated from the birth date and imaging date.
+
+- *boneAge*: Represents the **bone age of the selected image** in months, indicating the apparent age of the patient's bones based on the selected standardized image.
+
+---
+
+* Components Overview
+
+**1. Clinical Panel (ClinicalPanel.vue)**
+
+*Purpose:*
+
+- Collects patient demographic information:
+  - Gender (Male/Female)
+  - Birth Date
+  - Imaging Date
+- Displays calculated patient age (*ageInMonths*) and the *boneAge* of the selected image.
+
+*Props:*
+
+- *boneAge* (Number, required): The bone age of the current image, passed from the parent.
+
+*Emits:*
+
+- *update-report*: Emits updated patient demographic data to the parent component.
+
+*Reactive State:*
+
+- *selectedGender*: The selected gender of the patient.
+- *birthDate*: The patient's birth date.
+- *imagingDate*: The date of the imaging study.
+
+*Computed Properties:*
+
+- *ageInMonths*: The patient's chronological age in months, calculated from *birthDate* and *imagingDate*.
+
+*Methods:*
+
+- *setGender(gender)*: Updates the *selectedGender* and emits report updates.
+- *updateReport()*: Emits the *update-report* event with the current demographic data.
+- *resetDates()*: Resets the birth date and imaging date to default values.
+
+*Watchers:*
+
+- Watches for changes in *birthDate* and *imagingDate* to recalculate *ageInMonths* and emit report updates.
+
+*Display Elements:*
+
+- Gender selector (Male/Female toggle).
+- Date selectors for birth date and imaging date.
+- Report display showing:
+  - Gender
+  - Birth Date
+  - Imaging Date
+  - Age in Months (*ageInMonths*)
+  - Bone Age (*boneAge*)
+
+---
+
+**2. Image Display (ImageDisplay.vue)**
+
+*Purpose:*
+
+- Displays bone age images filtered by *selectedGender*.
+- Shows interpretation notes for the current image.
+- Allows navigation between images to find the closest match to the patient's radiograph.
+- Emits the *boneAge* of the current image to the parent component.
+
+*Props:*
+
+- *selectedGender* (String, required): The gender selected by the user.
+- *ageInMonths* (Number, required): The patient's chronological age in months.
+
+*Emits:*
+
+- *update-bone-age*: Emits the *boneAge* of the current image to the parent.
+
+*Reactive State:*
+
+- *currentIndex*: Index of the currently displayed image.
+- *isDragging*: Flag indicating if the image is being dragged.
+- *startX*: Starting X position for drag events.
+
+*Computed Properties:*
+
+- *filteredImages*: List of images filtered by *selectedGender*.
+- *currentImage*: The image object at *currentIndex* in *filteredImages*.
+- *isFirstImage*: True if *currentIndex* is 0.
+- *isLastImage*: True if *currentIndex* is the last index in *filteredImages*.
+
+*Methods:*
+
+- *binarySearchClosest(arr, target)*: Finds the index of the image with *boneAge* closest to *ageInMonths*.
+- *setImageIndex(newImageIndex)*: Updates *currentIndex* and emits the *boneAge* of the new image.
+- *nextImage()*: Navigates to the next image if not at the last image.
+- *previousImage()*: Navigates to the previous image if not at the first image.
+- *handleImageClick(event)*: Handles click events to navigate images based on click position.
+- *startDrag(event)*: Initializes drag state.
+- *onDrag(event)*: Handles dragging to navigate images.
+- *endDrag()*: Ends drag state.
+- *handleWheel(event)*: Handles wheel events to navigate images with debounce.
+- *handleKeyPress(event)*: Handles keyboard arrow keys for navigation.
+- *updateClosestImage()*: Updates *currentIndex* to the image with *boneAge* closest to *ageInMonths*.
+
+*Lifecycle Hooks:*
+
+- *onMounted()*: Adds event listeners and initializes the closest image.
+- *onBeforeUnmount()*: Removes event listeners and cancels debounced functions.
+
+*Interactions:*
+
+- Clicking the left portion of the image navigates to the previous image.
+- Clicking the right portion of the image navigates to the next image.
+- Dragging left or right navigates between images.
+- Scrolling up or down navigates between images.
+- Keyboard arrow keys navigate between images.
+
+---
+
+**3. Parent Component (App.vue)**
+
+*Purpose:*
+
+- Manages shared state between *ClinicalPanel* and *ImageDisplay*.
+- Handles events emitted by child components.
+- Calculates patient's age in months.
+- Maintains the *report* object containing patient demographics and *boneAge*.
+
+*Reactive State:*
+
+- *report*: An object containing:
+  - *gender*: Selected gender.
+  - *birthDate*: Patient's birth date.
+  - *imagingDate*: Imaging date.
+  - *ageInMonths*: Patient's chronological age in months.
+  - *boneAge*: Bone age of the selected image.
+
+*Methods:*
+
+- *calculateAgeInMonths(birthDate, imagingDate)*: Calculates patient's chronological age in months.
+- *handleReportUpdate(data)*: Updates *report* with new demographic data and recalculates *ageInMonths*.
+- *handleImageAgeUpdate(boneAge)*: Updates *report* with new *boneAge* from *ImageDisplay*.
+
+---
+
+* Data Model
+
+Each image object contains:
+
+#+BEGIN_SRC javascript
+{
+  src: "/image/male_120.jpg",
+  text: "Male, 10 years 0 months",
+  boneAge: 120, // Bone age of the image in months
+  gender: "male",
+  interpretationNotes: "<ul><li>Note 1</li><li>Note 2</li></ul>"
+}
+#+END_SRC
+
+---
+
+* Data Flow
+
+1. **ClinicalPanel** emits *update-report* with demographic data.
+2. **App.vue** handles *update-report*, updates *report*, and recalculates *ageInMonths*.
+3. **App.vue** passes *selectedGender* and *ageInMonths* as props to **ImageDisplay**.
+4. **ImageDisplay** filters images by *selectedGender* and uses *ageInMonths* to find the closest image by *boneAge*.
+5. **ImageDisplay** emits *update-bone-age* with the *boneAge* of the current image.
+6. **App.vue** handles *update-bone-age* and updates *report.boneAge*.
+7. **ClinicalPanel** receives *boneAge* as a prop and displays it in the report.
+
+*Event and Prop Flow:*
+
+- **Parent to Child:**
+  - **App.vue** passes *boneAge* to **ClinicalPanel**.
+  - **App.vue** passes *selectedGender* and *ageInMonths* to **ImageDisplay**.
+
+- **Child to Parent:**
+  - **ClinicalPanel** emits *update-report* to **App.vue**.
+  - **ImageDisplay** emits *update-bone-age* to **App.vue**.
+
+---
+
+* Functional Requirements
+
+- Users can select gender, birth date, and imaging date.
+- The patient's chronological age (*ageInMonths*) is calculated dynamically.
+- Images are filtered by selected gender.
+- The image with *boneAge* closest to *ageInMonths* is displayed by default.
+- Users can navigate between images using clicks, drags, scrolls, and keyboard arrows.
+- Interpretation notes for the current image are displayed.
+- The report displays patient demographics and the *boneAge* of the selected image.
+- Input validation ensures imaging date is not before birth date.
+
+---
+
+* Responsive Design
+
+**Overview:**
+
+The application adjusts its layout based on the viewport width to ensure optimal usability and prevent the image from shrinking below a specified minimum width (e.g., 60% of its original size). A configurable breakpoint determines when the layout changes.
+
+**Behavior Above Breakpoint:**
+
+- **Layout:**
+  - The **Clinical Panel** is positioned to the **left** of the **Image Display**.
+  - The **Image Display** includes both the bone age image and the interpretation notes, displayed side by side.
+- **Allocation:**
+  - The Clinical Panel occupies approximately **33%** of the viewport width.
+  - The Image Display occupies approximately **66%** of the viewport width.
+- **Image and Notes:**
+  - Within the Image Display, the image and notes each take up **50%** of the available width.
+  - The image maintains a width above the minimum threshold (e.g., does not shrink below 60% of its original size).
+
+**Behavior Below Breakpoint:**
+
+- **Layout:**
+  - The **Clinical Panel** stacks **above** the **Image Display**.
+  - The Image and Notes within the Image Display remain side by side.
+- **Breakpoint Configuration:**
+  - The breakpoint is set to when the image would shrink below the minimum width (e.g., 720px viewport width).
+  - This value is configurable within the code using a CSS variable (e.g., `--breakpoint-width`).
+
+**Very Small Screens (Optional Adjustment):**
+
+- **On screens narrower than a secondary breakpoint (e.g., 500px):**
+  - The **Image** and **Notes** within the Image Display may stack vertically to maintain readability.
+  - Alternatively, horizontal scrolling can be enabled to keep them side by side.
+
+**Implementation Details:**
+
+- **CSS Variables:**
+  - Used to set the breakpoint and minimum image width for easy configurability.
+- **Layout Techniques:**
+  - **Flexbox** is utilized to create responsive layouts for both the main container and the Image Display.
+- **Responsiveness:**
+  - The application adjusts dynamically to different screen sizes, ensuring usability on desktops, tablets, and mobile devices.
+- **Testing and Fine-Tuning:**
+  - Thorough testing is performed across various devices to ensure the layout behaves as expected.
+  - Adjustments to padding, margins, and font sizes are made as needed to optimize appearance and functionality.
+
+---
+
+* Future Features
+
+- Implement dark/light theme toggle.
+- Add additional calculations for bone age interpretations based on input data.
+
+---
+
+*End of Specification*

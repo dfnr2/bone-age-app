@@ -144,13 +144,12 @@ export default {
 
 <style scoped>
 .clinical-panel {
-  width: 300px;
   background-color: #1e1e1e;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
   color: white;
   border-radius: 8px;
+  width: 100%; /* Ensure it takes full width */
+  box-sizing: border-box;
 }
 
 .panel-header {
