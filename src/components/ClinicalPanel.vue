@@ -38,32 +38,44 @@
       <p>Birth Date: {{ birthDate }}</p>
       <p>Imaging Date: {{ imagingDate }}</p>
       <p>Age in Months: {{ ageInMonths }}</p>
-      <p>Bone Age: {{ this.boneAge }} months</p>
+      <p>Bone Age: {{ boneAge }} months</p>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  props: {
-    boneAge: {   // Receive the current image's age from the parent component
-      type: Number,
-      // default: 0
-    }
-  },
-  data() {
-    return {
-      selectedGender: "male",
-      birthDate: "",
-      imagingDate: this.getLocalDate(),  // Set to today's date by default
-    };
-  },
-  computed: {
-    ageInMonths() {
-      if (!this.birthDate || !this.imagingDate) return "N/A";
+import { ref, computed, watch } from 'vue';
 
-      const birth = new Date(this.birthDate);
-      const imaging = new Date(this.imagingDate);
+export default {
+  name: 'ClinicalPanel',
+  props: {
+    boneAge: {
+      type: Number,
+      required: true,
+    },
+  },
+  emits: ['update-report'],
+  setup(props, { emit }) {
+    // Reactive State
+    const selectedGender = ref('male');
+    const birthDate = ref('');
+    const imagingDate = ref(getLocalDate());
+
+    // Helper Function to Get Today's Date in YYYY-MM-DD Format
+    function getLocalDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Computed Property to Calculate Age in Months
+    const ageInMonths = computed(() => {
+      if (!birthDate.value || !imagingDate.value) return 'N/A';
+
+      const birth = new Date(birthDate.value);
+      const imaging = new Date(imagingDate.value);
       let yearDiff = imaging.getFullYear() - birth.getFullYear();
       let monthDiff = imaging.getMonth() - birth.getMonth();
       let dayDiff = imaging.getDate() - birth.getDate();
@@ -73,48 +85,61 @@ export default {
         monthDiff -= 1;
       }
 
-      return yearDiff * 12 + monthDiff;  // Total age in months
-    }
-  },
-  methods: {
-    getLocalDate() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');  // Correct month
-      const day = String(today.getDate()).padStart(2, '0');  // Correct day
+      return yearDiff * 12 + monthDiff; // Total age in months
+    });
 
-      return `${year}-${month}-${day}`;  // Return local date in YYYY-MM-DD
-    },
-    setGender(gender) {
-      this.selectedGender = gender;
-      this.updateReport();
-    },
-    updateReport() {
-      this.$emit('update-report', {
-        gender: this.selectedGender,
-        ageInMonths: this.ageInMonths,
-        birthDate: this.birthDate,
-        imagingDate: this.imagingDate
+    // Method to Set Gender and Update Report
+    const setGender = (gender) => {
+      selectedGender.value = gender;
+      updateReport();
+    };
+
+    // Method to Emit Updated Report Data to Parent
+    const updateReport = () => {
+      emit('update-report', {
+        gender: selectedGender.value,
+        ageInMonths: ageInMonths.value,
+        birthDate: birthDate.value,
+        imagingDate: imagingDate.value,
       });
-    },
-    resetDates() {
-      this.birthDate = "";  // Reset birth date to unset
-      this.imagingDate = this.getLocalDate();  // Reset imaging date to today's date
-      this.updateReport();  // Update the report to reflect the changes
-    }
+    };
+
+    // Method to Reset Dates to Default Values
+    const resetDates = () => {
+      birthDate.value = ''; // Reset birth date to unset
+      imagingDate.value = getLocalDate(); // Reset imaging date to today's date
+      updateReport(); // Emit updated report
+    };
+
+    // Watchers to Reactively Emit Report Updates When Dates Change
+    watch(birthDate, () => {
+      updateReport();
+    });
+
+    watch(imagingDate, () => {
+      updateReport();
+    });
+
+    // Watcher for boneAge Prop Changes
+    watch(
+      () => props.boneAge,
+      (newVal) => {
+        console.log('New Age', newVal);
+      }
+    );
+
+    // Return Variables and Methods to Template
+    return {
+      selectedGender,
+      birthDate,
+      imagingDate,
+      ageInMonths,
+      setGender,
+      updateReport,
+      resetDates,
+    };
   },
-  watch: {
-    birthDate() {
-      this.updateReport();  // Ensure birthDate change triggers report update
-    },
-    imagingDate() {
-      this.updateReport();  // Ensure imagingDate change triggers report update
-    },
-    boneAge() {
-      console.log('New Age', this.boneAge);
-    }
-  }
-}
+};
 </script>
 
 <style scoped>
@@ -136,7 +161,7 @@ export default {
 }
 
 .reset-container {
-  width: 25%;  /* 25% of the panel width */
+  width: 25%; /* 25% of the panel width */
 }
 
 .reset-button {
@@ -145,7 +170,7 @@ export default {
   border: none;
   padding: 10px;
   cursor: pointer;
-  border-radius: 10px;  /* Rounded rectangle */
+  border-radius: 10px; /* Rounded rectangle */
   height: 100%;
   width: 100%;
   text-align: center;
@@ -156,8 +181,8 @@ export default {
   justify-content: space-around;
   padding: 10px;
   background-color: #333;
-  border-radius: 10px;  /* Bigger rounded rect */
-  width: 50%;  /* 50% of the panel width */
+  border-radius: 10px; /* Bigger rounded rect */
+  width: 50%; /* 50% of the panel width */
   height: 100%;
 }
 

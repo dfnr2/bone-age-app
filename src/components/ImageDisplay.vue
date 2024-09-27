@@ -10,7 +10,7 @@
         @mousemove="onDrag"
         @mouseup="endDrag"
       >
-        <img :src="currentImage.src" alt="Bone Age Image" />
+        <img :src="currentImage.src" alt="Bone Age Image" loading="lazy" />
         <div class="image-text">{{ currentImage.text }}</div>
       </div>
 
@@ -25,122 +25,175 @@
 </template>
 
 <script>
-import { images } from '@/data/images.js';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { images } from '@/data/images.js'; // Correct Named Import
 
 export default {
-  props: ['selectedGender', 'ageInMonths'],  // Gender and age props
-  data() {
-    return {
-      images,
-      currentIndex: 0,  // Tracks current image index
-      isDragging: false,
-      startX: 0,
+  name: 'ImageDisplay',
+  props: {
+    selectedGender: {
+      type: String,
+      required: true,
+    },
+    ageInMonths: {
+      type: Number,
+      required: true,
+    },
+  },
+  emits: ['update-bone-age'],
+  setup(props, { emit }) {
+    // Reactive State
+    const currentIndex = ref(0);
+    const isDragging = ref(false);
+    const startX = ref(0);
+
+    // Computed Property: Filtered Images Based on Selected Gender
+    const filteredImages = computed(() => {
+      const filtered = images.filter(
+        (image) => image.gender.toLowerCase() === props.selectedGender.toLowerCase()
+      );
+      console.log('Filtered Images:', filtered);
+      return filtered;
+    });
+
+    // Computed Property: Current Image
+    const currentImage = computed(() => {
+      return filteredImages.value[currentIndex.value] || {};
+    });
+
+    // Computed Properties: Navigation Flags
+    const isFirstImage = computed(() => currentIndex.value === 0);
+    const isLastImage = computed(() => currentIndex.value === filteredImages.value.length - 1);
+
+    // Method: Set Image Index and Emit Bone Age
+    const setImageIndex = (newImageIndex) => {
+      if (newImageIndex < 0 || newImageIndex >= filteredImages.value.length) return;
+      currentIndex.value = newImageIndex;
+      const boneAge = filteredImages.value[currentIndex.value].boneAge; // Correct Property
+      console.log('Setting new bone age to:', boneAge);
+      emit('update-bone-age', boneAge); // Emit Correct Event
+      console.log('Emitting update-bone-age with:', boneAge);
     };
-  },
-  computed: {
-    filteredImages() {
-      return this.images.filter(image => image.gender === this.selectedGender.toLowerCase());
-    },
-    currentImage() {
-      return this.filteredImages[this.currentIndex] || {};
-    },
-    isFirstImage() {
-      return this.currentIndex === 0;
-   },
-    isLastImage() {
-      return this.currentIndex === this.filteredImages.length - 1;
-    }
-  },
-  methods: {
-    // Function to set the image age, taking a parameter for the age in months
-    setImageIndex(newImageIndex) {
-      // Set the image age
-      this.currentIndex = newImageIndex;
-      let boneAge = this.filteredImages[this.currentIndex].boneAge;
 
-      console.log('Setting new bone age to ',boneAge);
-      // Emit the age to the parent
-      this.$emit('update-bone-age', boneAge);
-    },
-    nextImage() {
-      if (!this.isLastImage) {
-        this.setImageIndex(this.currentIndex + 1)
+    // Method: Navigate to Next Image
+    const nextImage = () => {
+      if (!isLastImage.value) {
+        setImageIndex(currentIndex.value + 1);
       }
-    },
-    previousImage() {
-      if (!this.isFirstImage) {
-        this.setImageIndex(this.currentIndex - 1);
-      }
-    },
-    // Handle image click to navigate
-    handleImageClick(event) {
-      const imageWidth = event.target.offsetWidth; // Get image width
-      const clickX = event.offsetX; // Get x-coordinate of the click relative to the image
+    };
 
-      // Check if clicked on the right-most third, left-most third, or center
+    // Method: Navigate to Previous Image
+    const previousImage = () => {
+      if (!isFirstImage.value) {
+        setImageIndex(currentIndex.value - 1);
+      }
+    };
+
+    // Method: Handle Image Click for Navigation
+    const handleImageClick = (event) => {
+      const imageContent = event.currentTarget;
+      const imageWidth = imageContent.clientWidth;
+      const clickX = event.offsetX;
+
       if (clickX > (3 * imageWidth) / 5) {
-        this.nextImage(); // Right-most 1/3: move forward
+        nextImage(); // Clicked on the right-most third
       } else if (clickX < (2 * imageWidth) / 5) {
-        this.previousImage(); // Left-most 1/3: move backward
+        previousImage(); // Clicked on the left-most third
       }
-    },
-    startDrag(event) {
-      this.isDragging = true;
-      this.startX = event.clientX;
-    },
-    onDrag(event) {
-      if (!this.isDragging) return;
-      const dragDistance = event.clientX - this.startX;
+      // Clicked on the middle third: No action
+    };
+
+    // Methods: Handle Dragging for Navigation
+    const startDrag = (event) => {
+      isDragging.value = true;
+      startX.value = event.clientX;
+    };
+
+    const onDrag = (event) => {
+      if (!isDragging.value) return;
+      const dragDistance = event.clientX - startX.value;
+
       if (dragDistance > 50) {
-        this.previousImage();
-        this.isDragging = false;
+        previousImage();
+        isDragging.value = false;
       } else if (dragDistance < -50) {
-        this.nextImage();
-        this.isDragging = false;
+        nextImage();
+        isDragging.value = false;
       }
-    },
-    endDrag() {
-      this.isDragging = false;
-    },
-    handleKeyPress(event) {
-      if (event.key === "ArrowRight") {
-        this.nextImage();
-      } else if (event.key === "ArrowLeft") {
-        this.previousImage();
+    };
+
+    const endDrag = () => {
+      isDragging.value = false;
+    };
+
+    // Method: Handle Keyboard Navigation
+    const handleKeyPress = (event) => {
+      if (event.key === 'ArrowRight') {
+        nextImage();
+      } else if (event.key === 'ArrowLeft') {
+        previousImage();
       }
-    },
-    updateClosestImage() {
-      if (!this.ageInMonths || this.filteredImages.length === 0) return;
+    };
+
+    // Method: Update to the Closest Image Based on Age in Months
+    const updateClosestImage = () => {
+      if (!props.ageInMonths || filteredImages.value.length === 0) return;
 
       let closestIndex = 0;
-      let minDiff = Math.abs(this.filteredImages[0].boneAge - this.ageInMonths);
+      let minDiff = Math.abs(filteredImages.value[0].boneAge - props.ageInMonths);
 
-      this.filteredImages.forEach((image, index) => {
-        const diff = Math.abs(image.boneAge - this.ageInMonths);
+      filteredImages.value.forEach((image, index) => {
+        const diff = Math.abs(image.boneAge - props.ageInMonths);
         if (diff < minDiff) {
           closestIndex = index;
           minDiff = diff;
-          console.log('Finding closest age:', image.boneAge);
+          console.log('Finding closest bone age:', image.boneAge);
         }
       });
 
-      this.setImageIndex(closestIndex);
-    }
+      setImageIndex(closestIndex);
+    };
+
+    // Watchers: Update Closest Image When Age or Gender Changes
+    watch(
+      () => props.ageInMonths,
+      (newAge) => {
+        console.log('ageInMonths changed to:', newAge);
+        updateClosestImage();
+      }
+    );
+
+    watch(
+      () => props.selectedGender,
+      (newGender) => {
+        console.log('selectedGender changed to:', newGender);
+        updateClosestImage();
+      }
+    );
+
+    // Lifecycle Hooks: Add and Remove Keyboard Event Listeners
+    onMounted(() => {
+      window.addEventListener('keydown', handleKeyPress);
+      // Initialize to the closest image on mount
+      updateClosestImage();
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('keydown', handleKeyPress);
+    });
+
+    // Return Variables and Methods to Template
+    return {
+      currentImage,
+      filteredImages,
+      isFirstImage,
+      isLastImage,
+      handleImageClick,
+      startDrag,
+      onDrag,
+      endDrag,
+    };
   },
-  watch: {
-    ageInMonths() {
-      this.updateClosestImage();
-    },
-    selectedGender() {
-      this.updateClosestImage();
-    }
-  },
-  mounted() {
-    window.addEventListener("keydown", this.handleKeyPress);
-  },
-  beforeUnmount() {
-    window.removeEventListener("keydown", this.handleKeyPress);
-  }
 };
 </script>
 
@@ -151,6 +204,8 @@ export default {
   align-items: center;
   background-color: #1e1e1e;
   color: white;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .image-and-notes {
@@ -163,7 +218,19 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer; /* Add cursor pointer to indicate the image is clickable */
+  cursor: pointer; /* Indicates the image is clickable */
+  position: relative;
+}
+
+.image-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.image-text {
+  margin-top: 10px;
+  font-size: 1.1rem;
 }
 
 .interpretation-notes {
@@ -172,5 +239,15 @@ export default {
   background-color: #333;
   color: white;
   margin-left: 20px;
+  border-radius: 8px;
+}
+
+.interpretation-notes h3 {
+  margin-bottom: 10px;
+}
+
+.interpretation-notes ul {
+  list-style-type: disc;
+  padding-left: 20px;
 }
 </style>

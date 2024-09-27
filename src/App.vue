@@ -8,7 +8,7 @@
       <!-- Clinical Panel and Image Display -->
       <div class="clinical-panel-container">
         <ClinicalPanel
-          :boneAge="boneAge || 0"
+          :boneAge="report.boneAge"
           @update-report="handleReportUpdate"
         />
       </div>
@@ -16,51 +16,60 @@
         <ImageDisplay
           :selectedGender="report.gender || 'male'"
           :ageInMonths="report.ageInMonths || 0"
-          @update-bone-age="updateBoneAge"
-
-/>
+          @update-bone-age="handleImageAgeUpdate" />
       </div>
+    </div>
+
+    <!-- Optional Report Section for Debugging -->
+    <div class="report-section">
+      <h2>Report</h2>
+      <p><strong>Gender:</strong> {{ report.gender }}</p>
+      <p><strong>Birth Date:</strong> {{ formattedBirthDate }}</p>
+      <p><strong>Imaging Date:</strong> {{ formattedImagingDate }}</p>
+      <p><strong>Age in Months:</strong> {{ report.ageInMonths }}</p>
+      <p><strong>Bone Age:</strong> {{ report.boneAge }} months</p>
     </div>
   </div>
 </template>
 
 <script>
-// Import the correct components
+import { reactive, computed } from 'vue';
 import ClinicalPanel from './components/ClinicalPanel.vue';
 import ImageDisplay from './components/ImageDisplay.vue';
 
 export default {
-  // Register components
+  name: 'App',
   components: {
     ClinicalPanel,
     ImageDisplay,
   },
-  data() {
-    return {
-      report: {
-        gender: 'male',  // Default to Male
-        birthDate: '',
-        imagingDate: '',
-        ageInMonths: 0,  // Calculated age in months,
-      },
-      boneAge: 0 // Bone Age of current image
-    };
-  },
-  methods: {
-    handleReportUpdate(data) {
-      console.log('Received report update:', data);  // <-- Ensure this log appears when the event is emitted
-      this.report = data;  // Update the report object with the new data
+  setup() {
+    // Reactive State using reactive for the report object, including boneAge
+    const report = reactive({
+      gender: 'male',      // Default to Male
+      birthDate: '',
+      imagingDate: '',
+      ageInMonths: 0,     // Calculated age in months
+      boneAge: 0,         // Bone Age of current image
+    });
 
-      // Calculate ageInMonths if birthDate and imagingDate are present
-      if (this.report.birthDate && this.report.imagingDate) {
-        this.report.ageInMonths = this.calculateAgeInMonths(this.report.birthDate, this.report.imagingDate);
-      }
-    },
-    updateBoneAge(boneAge) {
-      console.log('Updating bone age:', boneAge);
-      this.boneAge = boneAge;  // Update bone age from selected image
-    },
-    calculateAgeInMonths(birthDate, imagingDate) {
+    // Computed Properties for Formatted Dates
+    const formattedBirthDate = computed(() =>
+      report.birthDate
+        ? new Date(report.birthDate).toLocaleDateString()
+        : 'N/A'
+    );
+
+    const formattedImagingDate = computed(() =>
+      report.imagingDate
+        ? new Date(report.imagingDate).toLocaleDateString()
+        : 'N/A'
+    );
+
+    // Method: Calculate Age in Months
+    const calculateAgeInMonths = (birthDate, imagingDate) => {
+      if (!birthDate || !imagingDate) return 0;
+
       const birth = new Date(birthDate);
       const imaging = new Date(imagingDate);
 
@@ -73,7 +82,35 @@ export default {
       }
 
       return yearDiff * 12 + monthDiff;
-    }
+    };
+
+    // Method: Handle Report Updates from ClinicalPanel
+    const handleReportUpdate = (data) => {
+      console.log('Received report update:', data);
+
+      // Update report object properties
+      report.gender = data.gender;
+      report.birthDate = data.birthDate;
+      report.imagingDate = data.imagingDate;
+      report.ageInMonths = calculateAgeInMonths(
+        data.birthDate,
+        data.imagingDate
+      );
+    };
+
+    // Method: Handle Bone Age Updates from ImageDisplay
+    const handleImageAgeUpdate = (age) => {
+      console.log('Updating bone age:', age);
+      report.boneAge = age; // Update boneAge within report object
+    };
+
+    return {
+      report,
+      formattedBirthDate,
+      formattedImagingDate,
+      handleReportUpdate,
+      handleImageAgeUpdate,
+    };
   },
 };
 </script>
@@ -83,6 +120,9 @@ export default {
   background-color: #121212;
   color: #ffffff;
   font-family: Arial, sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -93,6 +133,7 @@ h1 {
 .main-container {
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .clinical-panel-container {
@@ -104,5 +145,20 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.report-section {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+}
+
+.report-section h2 {
+  margin-bottom: 10px;
+}
+
+.report-section p {
+  margin: 5px 0;
 }
 </style>
