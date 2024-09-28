@@ -35,6 +35,28 @@
       <input type="date" v-model="imagingDate" @change="updateReport" />
     </div>
 
+    <!-- History Selector Dropdown -->
+    <div class="form-group">
+      <label for="history-select">History:</label>
+      <select id="history-select" v-model="selectedHistory" @change="handleHistoryChange">
+        <option v-for="option in historyOptions" :key="option" :value="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Custom History Input (Visible Only When "Custom" is Selected) -->
+    <div class="form-group" v-if="selectedHistory === 'Custom'">
+      <label for="custom-history">Enter Custom History:</label>
+      <input
+        type="text"
+        id="custom-history"
+        v-model="customHistory"
+        @input="updateReportDebounced"
+        placeholder="Type your custom history here"
+      />
+    </div>
+
     <!-- Report Section -->
     <div class="report-section">
       <label for="report">Report:</label>
@@ -59,7 +81,7 @@ import DOMPurify from 'dompurify';
 import { getStandardDeviation } from '@/data/BrushFoundationData.js';
 import { useToast } from 'vue-toastification';
 import removeMarkdown from 'remove-markdown'; // Import the remove-markdown package
-
+import debounce from 'lodash.debounce';
 export default {
   name: 'ClinicalPanel',
   props: {
@@ -77,6 +99,19 @@ export default {
     const selectedGender = ref('male');
     const birthDate = ref(getLocalDate());
     const imagingDate = ref(getLocalDate());
+
+    const historyOptions = ref([
+      'Short Stature',
+      'Precocious Puberty',
+      'Hyperpituitarism',
+      'Growth Hormone Deficiency',
+      'Turner Syndrome',
+      'Chronic Illness',
+      'Custom', // Option to allow custom input
+    ]);
+
+    const selectedHistory = ref(historyOptions.value[0]); // Default to the first option
+    const customHistory = ref(''); // Holds the custom history input
 
     // Helper Function to Get Today's Date in YYYY-MM-DD Format
     function getLocalDate() {
@@ -108,7 +143,7 @@ export default {
     // Method to Set Gender and Update Report
     const setGender = (gender) => {
       selectedGender.value = gender;
-      updateReport();
+      updateReport.debounced();
     };
 
     // Method to Emit Updated Report Data to Parent
@@ -121,20 +156,34 @@ export default {
       });
     };
 
-    // Method to Reset Dates to Default Values
+    // Debounced Update Report to Optimize Performance
+    const updateReportDebounced = debounce(updateReport, 300);
+
+    // Method to Reset Dates and History to Default Values
     const resetDates = () => {
       birthDate.value = getLocalDate(); // Reset birth date to today's date
       imagingDate.value = getLocalDate(); // Reset imaging date to today's date
-      updateReport(); // Emit updated report
+      selectedHistory.value = historyOptions.value[0]; // Reset history to default
+      customHistory.value = ''; // Reset custom history
+      updateReportDebounced(); // Emit updated report
+    };
+
+    // Handle History Selection Change
+    const handleHistoryChange = () => {
+      if (selectedHistory.value !== 'Custom') {
+        customHistory.value = ''; // Clear custom history if not in use
+        updateReportDebounced();
+      }
+      // If 'Custom' is selected, wait for user input to update the report
     };
 
     // Watchers to Reactively Emit Report Updates When Dates Change
     watch(birthDate, () => {
-      updateReport();
+      updateReportDebounced();
     });
 
     watch(imagingDate, () => {
-      updateReport();
+      updateReportDebounced();
     });
 
     // Watcher for boneAge Prop Changes
@@ -147,14 +196,22 @@ export default {
 
     // Create the report markdown
     const reportMarkdown = computed(() => {
+      const genderCapitalized = selectedGender.value.charAt(0).toUpperCase() + selectedGender.value.slice(1);
+      const boneAgeMonths = props.boneAge || 'N/A';
+
       let stdDevForAge = 'N/A';
       let twoStdDev = 'N/A';
       let lowerRange = 'N/A';
       let upperRange = 'N/A';
       let conclusion = 'N/A';
+      let reportedHistory = selectedHistory.value;
 
-      const genderCapitalized = selectedGender.value.charAt(0).toUpperCase() + selectedGender.value.slice(1);
-      const boneAgeMonths = props.boneAge || 'N/A';
+      if ('Custom' === selectedHistory.value ) {
+        reportedHistory = customHistory.value;
+      }
+      console.log('selected Hist: ', selectedHistory.value);
+      console.log('custom Hist: ', customHistory.value);
+      console.log('reported Hist: ', reportedHistory);
 
       if (ageInMonths.value !== 'N/A' && selectedGender.value) {
         stdDevForAge = getStandardDeviation(selectedGender.value, ageInMonths.value);
@@ -190,7 +247,7 @@ export default {
 
       const clinicalReport = `**EXAM**: X-RAY BONE AGE STUDY
 
-**HISTORY**: Short Stature
+**HISTORY**: ${reportedHistory || "None Provided"}
 
 **TECHNIQUE**: A single frontal view of the LEFT hand was obtained. Bone age was determined according to the method of Greulich and Pyle.
 
@@ -252,6 +309,10 @@ _End of report_
       renderedReport,
       copyReportToClipboard,
       copyButtonText,
+      handleHistoryChange,
+      selectedHistory,
+      customHistory,
+      historyOptions,
     };
   },
 };

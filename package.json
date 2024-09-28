@@ -11,6 +11,7 @@
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "^3.5.8",
     "core-js": "^3.8.3",
+    "debounce": "^2.1.1",
     "dompurify": "^3.1.7",
     "marked": "^14.1.2",
     "remove-markdown": "^0.5.5",
