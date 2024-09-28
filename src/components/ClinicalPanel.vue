@@ -44,6 +44,10 @@
         class="report-textbox"
         aria-readonly="true"
       ></div>
+      <!-- Copy to Clipboard Button -->
+      <button class="copy-button" @click="copyReportToClipboard" aria-label="Copy full bone age report to clipboard">
+        {{ copyButtonText }}
+      </button>
     </div>
   </div>
 </template>
@@ -52,7 +56,9 @@
 import { ref, computed, watch } from 'vue';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
-import { getStandardDeviation  } from '@/data/BrushFoundationData.js';
+import { getStandardDeviation } from '@/data/BrushFoundationData.js';
+import { useToast } from 'vue-toastification';
+import removeMarkdown from 'remove-markdown'; // Import the remove-markdown package
 
 export default {
   name: 'ClinicalPanel',
@@ -64,6 +70,9 @@ export default {
   },
   emits: ['update-report'],
   setup(props, { emit }) {
+    // Initialize Toast
+    const toast = useToast();
+
     // Reactive State
     const selectedGender = ref('male');
     const birthDate = ref(getLocalDate());
@@ -114,7 +123,7 @@ export default {
 
     // Method to Reset Dates to Default Values
     const resetDates = () => {
-      birthDate.value = getLocalDate(); // Reset birth date to unset
+      birthDate.value = getLocalDate(); // Reset birth date to today's date
       imagingDate.value = getLocalDate(); // Reset imaging date to today's date
       updateReport(); // Emit updated report
     };
@@ -138,7 +147,6 @@ export default {
 
     // Create the report markdown
     const reportMarkdown = computed(() => {
-
       let stdDevForAge = 'N/A';
       let twoStdDev = 'N/A';
       let lowerRange = 'N/A';
@@ -147,24 +155,39 @@ export default {
 
       const genderCapitalized = selectedGender.value.charAt(0).toUpperCase() + selectedGender.value.slice(1);
       const boneAgeMonths = props.boneAge || 'N/A';
+
       if (ageInMonths.value !== 'N/A' && selectedGender.value) {
         stdDevForAge = getStandardDeviation(selectedGender.value, ageInMonths.value);
 
-        twoStdDev = (2 * stdDevForAge).toFixed(2);
-        lowerRange = (ageInMonths.value - 2 * stdDevForAge).toFixed(2);
-        upperRange = (ageInMonths.value+ 2 * stdDevForAge).toFixed(2);
+        // Ensure stdDevForAge is a number
+        if (typeof stdDevForAge === 'number' && !isNaN(stdDevForAge)) {
+          twoStdDev = (2 * stdDevForAge).toFixed(2);
+          lowerRange = (ageInMonths.value - 2 * stdDevForAge).toFixed(2);
+          upperRange = (ageInMonths.value + 2 * stdDevForAge).toFixed(2);
 
-        if (boneAgeMonths < lowerRange) {
-          const excursion = (ageInMonths.value - boneAgeMonths) / stdDevForAge;
-          conclusion = `*Delayed* bone age, ${excursion} below the mean for chronological age.`;
-        } else if (boneAgeMonths > upperRange) {
-          const excursion = (boneAgeMonths - ageInMonths.value) / stdDevForAge;
-          conclusion = `*Advanced* bone age, ${excursion} above the mean for chronological age.`;
+          // Ensure boneAgeMonths is a number
+          const boneAgeValue = parseFloat(boneAgeMonths);
+          const lowerRangeValue = parseFloat(lowerRange);
+          const upperRangeValue = parseFloat(upperRange);
+
+          if (!isNaN(boneAgeValue)) {
+            if (boneAgeValue < lowerRangeValue) {
+              const excursion = ((ageInMonths.value - boneAgeValue) / stdDevForAge).toFixed(2);
+              conclusion = `*Delayed* bone age, ${excursion} standard deviations below the mean for chronological age.`;
+            } else if (boneAgeValue > upperRangeValue) {
+              const excursion = ((boneAgeValue - ageInMonths.value) / stdDevForAge).toFixed(2);
+              conclusion = `*Advanced* bone age, ${excursion} standard deviations above the mean for chronological age.`;
+            } else {
+              conclusion = 'Normal bone age, within two standard deviations of the mean for chronological age.';
+            }
+          } else {
+            conclusion = 'Invalid bone age value.';
+          }
         } else {
-          conclusion = 'Normal bone age, within two standard deviations of the mean for chronological age.';
+          conclusion = 'Invalid standard deviation value.';
         }
-
       }
+
       const clinicalReport = `**EXAM**: X-RAY BONE AGE STUDY
 
 **HISTORY**: Short Stature
@@ -175,20 +198,22 @@ export default {
 
 **FINDINGS**:
 
-- **Gender**: ${genderCapitalized}
-- **Chronological age**: ${ageInMonths.value} months
-- **Bone Age (estimated by the method of Greulich and Pyle)**: ${boneAgeMonths} months
-- **Standard Deviation for age**: ${stdDevForAge} months. (Based on the closest chronological age and gender group in the Brush Foundation data set). Two standard deviations at this age is ${twoStdDev} months, giving a normal range of ${lowerRange} to ${upperRange} (+/- 2 standard deviations).
+**Gender**: ${genderCapitalized}
+
+**Chronological age**: ${ageInMonths.value} months
+
+**Bone Age (estimated by the method of Greulich and Pyle)**: ${boneAgeMonths} months
+
+**Standard Deviation for age**: ${stdDevForAge} months. (Based on the closest chronological age and gender group in the Brush Foundation data set). Two standard deviations at this age is ${twoStdDev} months, giving a normal range of ${lowerRange} to ${upperRange} (+/- 2 standard deviations).
 
 **IMPRESSION**:
 
 1. ${conclusion}
 
-End of report
+_End of report_
 `;
 
-
-    return clinicalReport
+      return clinicalReport;
     });
 
     // Render the markdown to HTML
@@ -196,6 +221,25 @@ End of report
       const rawHTML = marked(reportMarkdown.value);
       return DOMPurify.sanitize(rawHTML);
     });
+
+    const copyReportToClipboard = async () => {
+      const plainTextReport = removeMarkdown(reportMarkdown.value);
+
+      try {
+        await navigator.clipboard.writeText(plainTextReport);
+        toast.success('Full report copied to clipboard!');
+        // Optional: Change button text
+        copyButtonText.value = 'Copied!';
+        setTimeout(() => {
+          copyButtonText.value = 'Copy Full Report';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+        toast.error('Failed to copy the report to clipboard.');
+      }
+    };
+
+    const copyButtonText = ref('Copy Full Report');
 
     return {
       selectedGender,
@@ -206,6 +250,8 @@ End of report
       updateReport,
       resetDates,
       renderedReport,
+      copyReportToClipboard,
+      copyButtonText,
     };
   },
 };
@@ -286,34 +332,8 @@ input {
   border-radius: 5px;
 }
 
-.report {
+.report-section {
   margin-top: 20px;
-  padding: 10px;
-  background-color: #444;
-  color: white;
-  border-radius: 5px;
-}
-
-.form-group {
-  display: inline-flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-/* Adjust label and input styles if necessary */
-.form-group label {
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  /* Existing input styles */
-  padding: 10px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .report-textbox {
@@ -323,8 +343,22 @@ input {
   overflow-y: auto;
   background-color: #333333;
   color: white;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   font-family: inherit;
+}
+
+.copy-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px; /* Space between buttons */
+}
+
+.copy-button:hover,
+.download-button:hover {
+  background-color: #0056b3; /* Darken on hover */
 }
 </style>

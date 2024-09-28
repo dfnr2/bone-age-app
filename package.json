@@ -13,8 +13,10 @@
     "core-js": "^3.8.3",
     "dompurify": "^3.1.7",
     "marked": "^14.1.2",
+    "remove-markdown": "^0.5.5",
     "vue": "^3.2.13",
-    "vue-cli-service": "^5.0.10"
+    "vue-cli-service": "^5.0.10",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
