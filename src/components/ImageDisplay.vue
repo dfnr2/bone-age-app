@@ -90,43 +90,22 @@ export default {
     const isFirstImage = computed(() => currentIndex.value === 0);
     const isLastImage = computed(() => currentIndex.value === filteredImages.value.length - 1);
 
-    /**
-     * Binary Search Function to Find the Closest boneAge
-     * Assumes that filteredImages is sorted in ascending order by boneAge
-     * @param {Array} arr - Array of image objects
-     * @param {number} target - Patient's age in months
-     * @returns {number} - Index of the closest image
-     */
-    const binarySearchClosest = (arr, target) => {
-      console.log('searching for bone age:', target)
-      let left = 0;
-      let right = arr.length - 1;
 
-      if (arr.length === 0) return -1;
-      if (target < arr[0].boneAge) return 0;
-      if (target > arr[right].boneAge) return right;
+     /**
+      * Find the Index of the Closest boneAge Using Reduce
+      * @param {Array} arr - Array of image objects
+      * @param {number} target - Patient's age in months
+      * @returns {number} - Index of the closest image, or -1 if the array is empty
+      */
+     const findClosestIndex = (arr, target) => {
+       if (arr.length === 0) return -1;
 
-      while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        if (arr[mid].boneAge === target) {
-          return mid;
-        } else if (arr[mid].boneAge < target) {
-          left = mid + 1;
-        } else {
-          right = mid - 1;
-        }
-      }
-
-      // After loop, left is the insertion point
-      // Compare arr[left] and arr[left -1] to find closest
-      if (left >= arr.length) return arr.length - 1;
-      if (left === 0) return 0;
-      const prev = arr[left - 1];
-      const next = arr[left];
-      return Math.abs(prev.boneAge - target) <= Math.abs(next.boneAge - target)
-        ? left - 1
-        : left;
-    };
+       return arr.reduce((closestIndex, current, index) => {
+         const currentDiff = Math.abs(current.boneAge - target);
+         const closestDiff = Math.abs(arr[closestIndex].boneAge - target);
+         return currentDiff < closestDiff ? index : closestIndex;
+       }, 0);
+     };
 
     // Method: Set Image Index and Emit Bone Age
     const setImageIndex = (newImageIndex) => {
@@ -220,7 +199,7 @@ export default {
     const updateClosestImage = () => {
       if (!props.ageInMonths || filteredImages.value.length === 0) return;
 
-      const closestIndex = binarySearchClosest(filteredImages.value, props.ageInMonths);
+      const closestIndex = findClosestIndex(filteredImages.value, props.ageInMonths);
       console.log('Closest index found:', closestIndex);
       setImageIndex(closestIndex);
     };

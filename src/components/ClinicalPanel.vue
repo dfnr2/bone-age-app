@@ -128,17 +128,11 @@ export default {
 
       const birth = new Date(birthDate.value);
       const imaging = new Date(imagingDate.value);
-      const yearDiff = imaging.getFullYear() - birth.getFullYear();
-      let monthDiff = imaging.getMonth() - birth.getMonth();
-      const dayDiff = imaging.getDate() - birth.getDate();
+      const avgDaysInMonth = 30.44;
 
-      // Adjust monthDiff if the imaging day is before the birth day in the current month
-      if (dayDiff < 0) {
-        monthDiff -= 1;
-      }
-
-      const months = yearDiff * 12 + monthDiff; // Total age in months
-
+      const months = Math.round((imaging - birth) / (10 * 60 * 60 * 24 * avgDaysInMonth)) / 100;
+      console.log('age in msec: ', imaging - birth);
+      console.log('age in months: ', months);
       return Math.min(Math.max(months, 0), 240);
     });
 
