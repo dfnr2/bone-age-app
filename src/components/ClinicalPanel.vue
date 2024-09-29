@@ -143,7 +143,7 @@ export default {
     // Method to Set Gender and Update Report
     const setGender = (gender) => {
       selectedGender.value = gender;
-      updateReport.debounced();
+      updateReportDebounced();
     };
 
     // Method to Emit Updated Report Data to Parent
