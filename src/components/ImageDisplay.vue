@@ -227,13 +227,19 @@ export default {
 
     // Debounce the scroll handler to prevent rapid navigation
     const debouncedHandleWheel = debounce((event) => {
-      const { deltaY } = event;
+      const { deltaX, deltaY } = event;
       if (deltaY > 0) {
         // Scrolling down
         nextImage();
       } else if (deltaY < 0) {
         // Scrolling up
         previousImage();
+      } else if (deltaX < 0) {
+        // Scrolling left
+        previousImage();
+      } else if (deltaX > 0) {
+        // Scrolling down
+        nextImage();
       }
     }, debounceDelay); // Adjust the delay (ms) as needed
 
@@ -295,7 +301,7 @@ export default {
 }
 
 .image-content {
-  flex: 1 1 50%;
+  flex: 1 1 67%;
   max-width: 100%;
   min-width: 240px; /* Minimum image width (60% of original image width) */
   display: flex;
@@ -320,7 +326,7 @@ export default {
 }
 
 .interpretation-notes {
-  flex: 1 1 50%;
+  flex: 1 1 33%;
   padding: 20px;
   background-color: #333;
   color: white;

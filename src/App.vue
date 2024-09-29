@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- Title -->
-    <h1>Greulich and Pyle Bone Age Calculator, v1.3</h1>
+    <h1>Greulich and Pyle Bone Age Calculator, v1.5</h1>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -134,11 +134,11 @@ h1 {
 }
 
 .clinical-panel-container {
-  flex: 1 1 33%;
+  flex: 1 1 25%;
 }
 
 .image-display-container {
-  flex: 1 1 66%;
+  flex: 1 1 75%;
   display: flex;
   flex-direction: column;
 }

@@ -3,7 +3,7 @@
     <div class="panel-header">
       <!-- Reset Button -->
       <div class="reset-container">
-        <button @click="resetDates" class="reset-button">Reset</button>
+        <div><button @click="resetDates" class="reset-button">Reset</button></div>
       </div>
 
       <!-- Gender Slider -->
@@ -128,16 +128,18 @@ export default {
 
       const birth = new Date(birthDate.value);
       const imaging = new Date(imagingDate.value);
-      let yearDiff = imaging.getFullYear() - birth.getFullYear();
+      const yearDiff = imaging.getFullYear() - birth.getFullYear();
       let monthDiff = imaging.getMonth() - birth.getMonth();
-      let dayDiff = imaging.getDate() - birth.getDate();
+      const dayDiff = imaging.getDate() - birth.getDate();
 
       // Adjust monthDiff if the imaging day is before the birth day in the current month
       if (dayDiff < 0) {
         monthDiff -= 1;
       }
 
-      return yearDiff * 12 + monthDiff; // Total age in months
+      const months = yearDiff * 12 + monthDiff; // Total age in months
+
+      return Math.min(Math.max(months, 0), 240);
     });
 
     // Method to Set Gender and Update Report
@@ -157,7 +159,7 @@ export default {
     };
 
     // Debounced Update Report to Optimize Performance
-    const updateReportDebounced = debounce(updateReport, 300);
+    const updateReportDebounced = debounce(updateReport, 100);
 
     // Method to Reset Dates and History to Default Values
     const resetDates = () => {
