@@ -131,10 +131,14 @@ h1 {
   display: flex;
   flex-wrap: nowrap;
   gap: 20px;
+  height: 80vh; /* Example height: adjust as needed */
 }
 
-.clinical-panel-container {
+.clinical-panel-container,
+.image-display-container {
   flex: 1 1 25%;
+  display: flex;
+  flex-direction: column;
 }
 
 .image-display-container {

@@ -66,7 +66,9 @@
         class="report-textbox"
         aria-readonly="true"
       ></div>
-      <!-- Copy to Clipboard Button -->
+    </div>
+    <!-- Copy to Clipboard Button -->
+    <div class="copy-button-container">
       <button class="copy-button" @click="copyReportToClipboard" aria-label="Copy full bone age report to clipboard">
         {{ copyButtonText }}
       </button>
@@ -316,11 +318,13 @@ _End of report_
 
 <style scoped>
 .clinical-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure it fills the parent container's height */
   background-color: #1e1e1e;
   padding: 20px;
   color: white;
   border-radius: 8px;
-  width: 100%; /* Ensure it takes full width */
   box-sizing: border-box;
 }
 
@@ -390,7 +394,8 @@ input {
 }
 
 .report-section {
-  margin-top: 20px;
+  flex: 1; /* Allows the report section to grow and fill available space */
+  overflow-y: auto; /* Adds a vertical scrollbar when content exceeds the container's height */
 }
 
 .report-textbox {
@@ -401,6 +406,11 @@ input {
   background-color: #333333;
   color: white;
   font-family: inherit;
+}
+
+.copy-button-container {
+  /* Optional: Add padding or background if needed */
+  padding-top: 0px;
 }
 
 .copy-button {
