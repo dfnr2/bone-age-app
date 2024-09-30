@@ -242,7 +242,7 @@ export default {
         // Ensure stdDevForAge is a number
         if (typeof stdDevForAge === 'number' && !isNaN(stdDevForAge)) {
           twoStdDev = (2 * stdDevForAge).toFixed(2);
-          lowerRange = (ageInMonths.value - 2 * stdDevForAge).toFixed(2);
+          lowerRange = Math.max(0, (ageInMonths.value - 2 * stdDevForAge).toFixed(2));
           upperRange = (ageInMonths.value + 2 * stdDevForAge).toFixed(2);
 
           // Ensure boneAgeMonths is a number
