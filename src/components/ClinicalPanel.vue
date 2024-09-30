@@ -57,21 +57,44 @@
       />
     </div>
 
-    <!-- Report Section -->
+    <!-- Report Section with Tabs -->
     <div class="report-section">
-      <label for="report">Report:</label>
-      <div
-        id="report"
-        v-html="renderedReport"
-        class="report-textbox"
-        aria-readonly="true"
-      ></div>
-    </div>
-    <!-- Copy to Clipboard Button -->
-    <div class="copy-button-container">
-      <button class="copy-button" @click="copyReportToClipboard" aria-label="Copy full bone age report to clipboard">
-        {{ copyButtonText }}
-      </button>
+      <!-- Tab Buttons -->
+      <div class="report-tabs" role="tablist">
+        <button
+          :class="{ active: activeTab === 'summary' }"
+          @click="activeTab = 'summary'"
+          role="tab"
+          :aria-selected="activeTab === 'summary'"
+        >
+          Summary
+        </button>
+        <button
+          :class="{ active: activeTab === 'report' }"
+          @click="activeTab = 'report'"
+          role="tab"
+          :aria-selected="activeTab === 'report'"
+        >
+          Full Report
+        </button>
+      </div>
+
+      <!-- Report Content -->
+      <div class="report-content">
+        <div v-if="activeTab === 'report'" v-html="renderedReport"></div>
+        <div v-else-if="activeTab === 'summary'" v-html="renderedSummary"></div>
+      </div>
+
+      <!-- Copy to Clipboard Button -->
+      <div class="copy-button-container">
+        <button
+          class="copy-button"
+          @click="copyReportToClipboard"
+          aria-label="Copy full bone age report to clipboard"
+        >
+          {{ copyButtonText }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +105,7 @@ import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import { getStandardDeviation } from '@/data/BrushFoundationData.js';
 import { useToast } from 'vue-toastification';
-import removeMarkdown from 'remove-markdown'; // Import the remove-markdown package
+import removeMarkdown from 'remove-markdown'; // Used for the copy-report function.
 import debounce from 'lodash.debounce';
 export default {
   name: 'ClinicalPanel',
@@ -112,6 +135,7 @@ export default {
       'Custom', // Option to allow custom input
     ]);
 
+    const activeTab = ref('summary'); // Default to 'summary' tab
     const selectedHistory = ref(historyOptions.value[0]); // Default to the first option
     const customHistory = ref(''); // Holds the custom history input
 
@@ -202,6 +226,7 @@ export default {
       let lowerRange = 'N/A';
       let upperRange = 'N/A';
       let conclusion = 'N/A';
+      let shortConclusion = 'N/A';
       let reportedHistory = selectedHistory.value;
 
       if ('Custom' === selectedHistory.value ) {
@@ -229,11 +254,14 @@ export default {
             if (boneAgeValue < lowerRangeValue) {
               const excursion = ((ageInMonths.value - boneAgeValue) / stdDevForAge).toFixed(2);
               conclusion = `*Delayed* bone age, ${excursion} standard deviations below the mean for chronological age.`;
+              shortConclusion = 'Delayed';
             } else if (boneAgeValue > upperRangeValue) {
               const excursion = ((boneAgeValue - ageInMonths.value) / stdDevForAge).toFixed(2);
               conclusion = `*Advanced* bone age, ${excursion} standard deviations above the mean for chronological age.`;
+              shortConclusion = 'Advanced'
             } else {
               conclusion = 'Normal bone age, within two standard deviations of the mean for chronological age.';
+              shortConclusion = 'Normal'
             }
           } else {
             conclusion = 'Invalid bone age value.';
@@ -259,7 +287,7 @@ export default {
 
 **Bone Age (estimated by the method of Greulich and Pyle)**: ${boneAgeMonths} months
 
-**Standard Deviation for age**: ${stdDevForAge} months. (Based on the closest chronological age and gender group in the Brush Foundation data set). Two standard deviations at this age is ${twoStdDev} months, giving a normal range of ${lowerRange} to ${upperRange} (+/- 2 standard deviations).
+**Standard Deviation for age**: ${stdDevForAge} months. (Based on the closest chronological age and gender group in the Brush Foundation data set). Two standard deviations at this age is ${twoStdDev} months, giving a normal range of ${lowerRange} to ${upperRange} months (+/- 2 standard deviations).
 
 **IMPRESSION**:
 
@@ -268,17 +296,44 @@ export default {
 _End of report_
 `;
 
-      return clinicalReport;
+      const clinicalSummary = `**HISTORY**: ${reportedHistory || "None Provided"}
+
+**Gender**: ${genderCapitalized}
+
+**Chronological age**: ${ageInMonths.value} months
+
+**Bone Age (estimated by the method of Greulich and Pyle)**: ${boneAgeMonths} months
+
+**Standard Deviation for age**: ${stdDevForAge} months.
+
+**Range**: ${lowerRange} to ${upperRange} months.
+
+**Conclusion**: ${shortConclusion}`;
+
+      return { clinicalReport, clinicalSummary };
     });
 
     // Render the markdown to HTML
     const renderedReport = computed(() => {
-      const rawHTML = marked(reportMarkdown.value);
+      const rawHTML = marked(reportMarkdown.value.clinicalReport);
       return DOMPurify.sanitize(rawHTML);
     });
 
+
+    // Rendered Summary
+    const renderedSummary = computed(() => {
+      if (reportMarkdown.value.clinicalSummary) {
+        const rawHTML = marked(reportMarkdown.value.clinicalSummary);
+        return DOMPurify.sanitize(rawHTML);
+      }
+      return '';
+    });
+
     const copyReportToClipboard = async () => {
-      const plainTextReport = removeMarkdown(reportMarkdown.value);
+      console.log('Clinical Report:', reportMarkdown.value.clinicalReport);
+      console.log('Type of Clinical Report:', typeof reportMarkdown.value.clinicalReport);
+
+      const plainTextReport = removeMarkdown(reportMarkdown.value.clinicalReport);
 
       try {
         await navigator.clipboard.writeText(plainTextReport);
@@ -305,11 +360,13 @@ _End of report_
       updateReport,
       resetDates,
       renderedReport,
+      renderedSummary,
       copyReportToClipboard,
       copyButtonText,
       handleHistoryChange,
       selectedHistory,
       customHistory,
+      activeTab,
       historyOptions,
     };
   },
@@ -393,20 +450,63 @@ input {
   border-radius: 5px;
 }
 
+/* Report Section */
 .report-section {
-  flex: 1; /* Allows the report section to grow and fill available space */
-  overflow-y: auto; /* Adds a vertical scrollbar when content exceeds the container's height */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.report-textbox {
-  border: 1px solid #ccc;
-  padding: 8px;
-  min-height: 150px;
-  overflow-y: auto;
-  background-color: #333333;
-  color: white;
-  font-family: inherit;
+/* Tab Buttons */
+.report-tabs {
+  display: flex;
+  border-bottom: 2px solid #007bff; /* Blue underline for tabs */
+  margin-bottom: 10px;
+  border-radius: 5px 5px 0 0; /* Rounded top corners */
+  overflow: hidden; /* Ensures border-radius works on child buttons */
 }
+
+/* Individual Tab Buttons */
+.report-tabs button {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: white; /* Default background */
+  color: #007bff; /* Blue text */
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  outline: none; /* Remove default focus outline */
+}
+
+/* Active Tab */
+.report-tabs button.active {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  font-weight: bold;
+}
+
+/* Hover Effect for Unselected Tabs */
+.report-tabs button:not(.active):hover {
+  background-color: #f0f0f0; /* Light gray on hover */
+}
+
+/* Focus State for Accessibility */
+.report-tabs button:focus {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Blue focus ring */
+}
+
+/* Report Content */
+.report-content {
+  flex: 1;
+  overflow-y: auto; /* Scrollbar for overflowing content */
+  padding-right: 10px; /* Space for scrollbar */
+  background-color: black; /* Optional: Different background for report content */
+  padding: 15px;
+  border: 1px solid #ddd; /* Light border around report content */
+  border-radius: 0 0 5px 5px; /* Rounded bottom corners */
+}
+
 
 .copy-button-container {
   /* Optional: Add padding or background if needed */

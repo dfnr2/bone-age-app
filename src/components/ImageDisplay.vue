@@ -197,7 +197,12 @@ export default {
      * Update to the Closest Image Based on Age in Months using Binary Search
      */
     const updateClosestImage = () => {
-      if (!props.ageInMonths || filteredImages.value.length === 0) return;
+      if (props.ageInMonths === null ||
+         props.ageInMonths === undefined ||
+         filteredImages.value.length === 0
+      ) {
+        return;
+      }
 
       const closestIndex = findClosestIndex(filteredImages.value, props.ageInMonths);
       console.log('Closest index found:', closestIndex);
