@@ -3,11 +3,11 @@
     <!-- Title -->
     <h1 class="clinical-title">Greulich and Pyle Bone Age Calculator, v1.5</h1>
 
-    <!-- Existing Content -->
+    <!-- Panel Header -->
     <div class="panel-header">
       <!-- Reset Button and Gender Slider -->
       <div class="reset-container">
-        <div><button @click="resetDates" class="reset-button">Reset</button></div>
+        <button @click="resetDates" class="reset-button">Reset</button>
       </div>
 
       <!-- Gender Slider -->
@@ -15,12 +15,14 @@
         <div
           :class="['gender-option', selectedGender === 'male' ? 'active' : 'inactive']"
           @click="setGender('male')"
+          aria-label="Select Male Gender"
         >
           Male
         </div>
         <div
           :class="['gender-option', selectedGender === 'female' ? 'active' : 'inactive']"
           @click="setGender('female')"
+          aria-label="Select Female Gender"
         >
           Female
         </div>
@@ -36,7 +38,7 @@
     <!-- Imaging Date Selector -->
     <div class="form-group">
       <label for="imaging-date">Imaging Date:</label>
-      <input type="date" v-model="imagingDate" @change="updateReport" />
+      <input type="date" id="imaging-date" v-model="imagingDate" @change="updateReport" />
     </div>
 
     <!-- History Selector Dropdown -->
@@ -111,6 +113,7 @@ import { getStandardDeviation } from '@/data/BrushFoundationData.js';
 import { useToast } from 'vue-toastification';
 import removeMarkdown from 'remove-markdown'; // Used for the copy-report function.
 import debounce from 'lodash.debounce';
+
 export default {
   name: 'ClinicalPanel',
   props: {
@@ -174,6 +177,15 @@ export default {
 
     // Method to Emit Updated Report Data to Parent
     const updateReport = () => {
+      // Validate imaging date is not before birth date
+      const birth = new Date(birthDate.value);
+      const imaging = new Date(imagingDate.value);
+
+      if (imaging < birth) {
+        toast.error('Imaging date cannot be before birth date.');
+        return;
+      }
+
       emit('update-report', {
         gender: selectedGender.value,
         ageInMonths: ageInMonths.value,
@@ -241,7 +253,12 @@ export default {
       console.log('reported Hist: ', reportedHistory);
 
       if (ageInMonths.value !== 'N/A' && selectedGender.value) {
-        stdDevForAge = getStandardDeviation(selectedGender.value, ageInMonths.value);
+        try {
+          stdDevForAge = getStandardDeviation(selectedGender.value, ageInMonths.value);
+        } catch (error) {
+          console.error(error);
+          stdDevForAge = 'N/A';
+        }
 
         // Ensure stdDevForAge is a number
         if (typeof stdDevForAge === 'number' && !isNaN(stdDevForAge)) {
@@ -399,42 +416,60 @@ _End of report_
 .panel-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch; /* Ensure children stretch to match height */
   margin-bottom: 20px;
+  height: 60px; /* Increased from 50px to 60px */
 }
 
 .reset-container {
   width: 25%; /* 25% of the panel width */
+  display: flex;
+  align-items: stretch; /* Stretch the button to fill the container's height */
 }
-
 .reset-button {
   background-color: #ff4d4d;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 0 20px; /* Horizontal padding */
   cursor: pointer;
-  border-radius: 10px; /* Rounded rectangle */
-  height: 100%;
-  width: 100%;
-  text-align: center;
+  border-radius: 10px;
+  height: 100%; /* Fill the container's height */
+  width: 100%; /* Fill the container's width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
 }
 
 .gender-slider {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
+  align-items: center; /* Center the options vertically */
+  padding: 0 10px; /* Horizontal padding */
   background-color: #333;
   border-radius: 10px; /* Bigger rounded rect */
-  width: 50%; /* 50% of the panel width */
-  height: 100%;
+  width: 70%; /* 50% of the panel width */
+  height: 100%; /* Fill the panel-header's height */
 }
 
 .gender-option {
+  max-width: 100px;
   cursor: pointer;
-  padding: 10px;
+  padding: 8px 10px; /* Reduced padding to prevent overflow */
   border-radius: 5px;
-  font-size: 1.2rem;
+  font-size: 1rem; /* Consistent font size */
   color: gray;
+  flex: 1; /* Allow buttons to grow equally */
+  text-align: center;
+  margin: 0 5px; /* Space between buttons */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflow if text is too long */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  height: 100%; /* Fill the slider's height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gender-option.active {
@@ -451,7 +486,8 @@ label {
   margin-top: 20px;
 }
 
-input {
+input,
+select {
   margin-top: 5px;
   margin-bottom: 20px;
   padding: 10px;
@@ -517,7 +553,6 @@ input {
   border: 1px solid #ddd; /* Light border around report content */
   border-radius: 0 0 5px 5px; /* Rounded bottom corners */
 }
-
 
 .copy-button-container {
   /* Optional: Add padding or background if needed */
