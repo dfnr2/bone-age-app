@@ -22,7 +22,21 @@ The application comprises two main components:
 
 These components interact through a parent component (*App.vue*), which manages shared state and data flow.
 
----
+* App Layout
+
+- Image Display: Centered. A representative image aspect ratio for all the
+  images will be pre-determined and provided as a constant. If the window aspect
+  ratio (width/height) is greater or equal to twice the representatitve image
+  aspect ratio, then the image is 100% height of the window, and 50% width. If
+  the windows aspect ratio is less than twice the representative image aspect ratio, then the
+  width shall be 50% of the window and the height shall be adjusted according to
+  the image aspect ratio.
+
+- Image Notes: To the right of image.  Part of the Image component.  25% of the window width.  Height is 100% of window height.
+
+- Clinical Panel: To the left of the image.  25% of window width.
+
+
 
 * Terminology Clarification
 

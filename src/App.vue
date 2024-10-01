@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <!-- Title -->
-    <h1>Greulich and Pyle Bone Age Calculator, v1.5</h1>
-
     <!-- Main Content -->
     <div class="main-container">
       <!-- Clinical Panel -->
@@ -111,6 +108,8 @@ export default {
 <style>
 :root {
   --breakpoint-width: 720px; /* Configurable breakpoint */
+  --image-aspect-ratio: 5 / 8; /* Represented as width / height */
+  --threshold-aspect-ratio: calc(2 * var(--image-aspect-ratio)); /* 1.25 */
 }
 
 #app {
@@ -122,11 +121,6 @@ export default {
   box-sizing: border-box;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .main-container {
   display: flex;
   flex-wrap: nowrap;
@@ -136,26 +130,85 @@ h1 {
 
 .clinical-panel-container,
 .image-display-container {
-  flex: 1 1 25%;
   display: flex;
   flex-direction: column;
+}
+
+/* Default Flex Basis for Containers */
+.clinical-panel-container {
+  flex: 0 0 25%; /* 25% of the window width */
 }
 
 .image-display-container {
-  flex: 1 1 75%;
+  flex: 0 0 75%; /* 75% of the window width */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 20px;
 }
 
-/* Adjusted Layout Below Breakpoint */
-@media (max-width: var(--breakpoint-width)) {
-  .main-container {
-    flex-direction: column;
+/* Image Display Sizing */
+.image-display-container .image-content {
+  flex: 1; /* Takes up available space */
+}
+
+.image-display-container .interpretation-notes {
+  flex: 0 0 25%; /* 25% of the window width */
+  height: 100%;
+}
+
+/* Responsive Layout Based on Aspect Ratio */
+@media (min-aspect-ratio: 5/4) {
+  /* Window aspect ratio ≥ 1.25 */
+  .image-display-container {
+    flex-direction: row;
   }
 
-  .clinical-panel-container,
-  .image-display-container {
-    flex: 1 1 100%;
+  .image-display-container .image-content {
+    width: 50%; /* 50% of window width */
+    height: 100vh; /* 100% of window height */
   }
+
+  .image-display-container .interpretation-notes {
+    width: 25%; /* 25% of window width */
+    height: 100vh; /* 100% of window height */
+  }
+
+  .clinical-panel-container {
+    width: 25%; /* 25% of window width */
+  }
+}
+
+@media (max-aspect-ratio: 5/4) {
+  /* Window aspect ratio < 1.25 */
+  .image-display-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-display-container .image-content {
+    width: 50%; /* 50% of window width */
+    height: calc((50% / (5 / 8))); /* Height based on aspect ratio */
+  }
+
+  .image-display-container .interpretation-notes {
+    width: 25%; /* 25% of window width */
+    height: 100vh; /* 100% of window height */
+  }
+
+  .clinical-panel-container {
+    width: 25%; /* 25% of window width */
+  }
+}
+
+.clinical-panel-container,
+.image-display-container {
+  box-sizing: border-box;
+}
+
+/* Ensure image and notes fill their containers */
+.image-display-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 </style>

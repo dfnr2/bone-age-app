@@ -1,7 +1,11 @@
 <template>
   <div class="clinical-panel">
+    <!-- Title -->
+    <h1 class="clinical-title">Greulich and Pyle Bone Age Calculator, v1.5</h1>
+
+    <!-- Existing Content -->
     <div class="panel-header">
-      <!-- Reset Button -->
+      <!-- Reset Button and Gender Slider -->
       <div class="reset-container">
         <div><button @click="resetDates" class="reset-button">Reset</button></div>
       </div>
@@ -383,6 +387,13 @@ _End of report_
   color: white;
   border-radius: 8px;
   box-sizing: border-box;
+}
+
+.clinical-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #ffffff;
 }
 
 .panel-header {
