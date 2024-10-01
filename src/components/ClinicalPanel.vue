@@ -333,7 +333,7 @@ _End of report_
       console.log('Clinical Report:', reportMarkdown.value.clinicalReport);
       console.log('Type of Clinical Report:', typeof reportMarkdown.value.clinicalReport);
 
-      const plainTextReport = removeMarkdown(reportMarkdown.value.clinicalReport);
+      const plainTextReport = removeMarkdown(reportMarkdown.value.clinicalReport, { stripListLeaders: false });
 
       try {
         await navigator.clipboard.writeText(plainTextReport);
