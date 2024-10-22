@@ -1,7 +1,7 @@
 // src/data/images.js
 export const images = [
   {
-    src: "/images/female_000.jpg",
+    src: "./images/female_000.jpg",
     text: "Female, age 0 years 0 months",
     gender: "female",
     boneAge: 0,
@@ -15,7 +15,7 @@ export const images = [
       "- No ossification centers seen.\n",
   },
   {
-    src: "/images/female_003.jpg",
+    src: "./images/female_003.jpg",
     text: "Female, age 0 years 3 months",
     gender: "female",
     boneAge: 3,
@@ -33,7 +33,7 @@ export const images = [
       "- The flaring of the distal ends of the radius and ulna is slightly more pronounced.\n",
   },
   {
-    src: "/images/female_006.jpg",
+    src: "./images/female_006.jpg",
     text: "Female, age 0 years 6 months",
     gender: "female",
     boneAge: 6,
@@ -45,7 +45,7 @@ export const images = [
       "- The hamate surface of the capitate is beginning to flatten. The future long axis of the capitate is now evident.\n",
   },
   {
-    src: "/images/female_009.jpg",
+    src: "./images/female_009.jpg",
     text: "Female, age 0 years 9 months",
     gender: "female",
     boneAge: 9,
@@ -56,7 +56,7 @@ export const images = [
       "- The capitate is now larger and farther advanced in its development than the hamate.\n",
   },
   {
-    src: "/images/female_012.jpg",
+    src: "./images/female_012.jpg",
     text: "Female, age 1 year 0 months",
     gender: "female",
     boneAge: 12,
@@ -70,7 +70,7 @@ export const images = [
       "- A flattened oval ossification center is now present in the distal radial epiphysis.\n",
   },
   {
-    src: "/images/female_015.jpg",
+    src: "./images/female_015.jpg",
     text: "Female, age 1 year 3 months",
     gender: "female",
     boneAge: 15,
@@ -81,7 +81,7 @@ export const images = [
       "- Ossification has begun in the epiphysis of the 4th metacarpal.\n",
   },
   {
-    src: "/images/female_018.jpg",
+    src: "./images/female_018.jpg",
     text: "Female, age 1 year 6 months",
     gender: "female",
     boneAge: 18,
@@ -93,7 +93,7 @@ export const images = [
       "- Ossification has begun in the epiphysis of the 5th metacarpal.\n",
   },
   {
-    src: "/images/female_024.jpg",
+    src: "./images/female_024.jpg",
     text: "Female, age 2 years 0 months",
     gender: "female",
     boneAge: 24,
@@ -113,7 +113,7 @@ export const images = [
       "- The radial epiphysis now has a rounded lateral margin and a rather pointed ulnar tip.\n",
   },
   {
-    src: "/images/female_030.jpg",
+    src: "./images/female_030.jpg",
     text: "Female, age 2 years 6 months",
     gender: "female",
     boneAge: 30,
@@ -132,7 +132,7 @@ export const images = [
       "- The volar and dorsal surfaces of the radial epiphysis can now be distinguished. The volar margin is visible as a rather thick white line. Distally the thin dorsal margin of the epiphysis projects beyond the volar margin.\n",
   },
   {
-    src: "/images/female_036.jpg",
+    src: "./images/female_036.jpg",
     text: "Female, age 3 years 0 months",
     gender: "female",
     boneAge: 36,
@@ -146,7 +146,7 @@ export const images = [
       "- The lunate is much advanced in its development as compared with the other bones. This ossification center is now rounded and its margins are smooth.\n",
   },
   {
-    src: "/images/female_042.jpg",
+    src: "./images/female_042.jpg",
     text: "Female, age 3 years 6 months",
     gender: "female",
     boneAge: 42,
@@ -161,7 +161,7 @@ export const images = [
       "- The ulnar portion of the distal margin of the radial epiphysis flattens slightly as its lunate articular surface begins to differentiate.\n",
   },
   {
-    src: "/images/female_050.jpg",
+    src: "./images/female_050.jpg",
     text: "Female, age 4 years 2 months",
     gender: "female",
     boneAge: 50,
@@ -175,7 +175,7 @@ export const images = [
       "- Ossification centers are now visible in the scaphoid and trapezoid.\n",
   },
   {
-    src: "/images/female_060.jpg",
+    src: "./images/female_060.jpg",
     text: "Female, age 5 years 0 months",
     gender: "female",
     boneAge: 60,
@@ -195,7 +195,7 @@ export const images = [
       "- That part of the radial epiphysis from which the styloid process develops is beginning to enlarge.\n",
   },
   {
-    src: "/images/female_069.jpg",
+    src: "./images/female_069.jpg",
     text: "Female, age 5 years 9 months",
     gender: "female",
     boneAge: 69,
@@ -208,7 +208,7 @@ export const images = [
       "- The relative enlargement of the lateral half of the radial epiphysis is now distinct.\n",
   },
   {
-    src: "/images/female_082.jpg",
+    src: "./images/female_082.jpg",
     text: "Female, age 6 years 10 months",
     gender: "female",
     boneAge: 82,
@@ -227,7 +227,7 @@ export const images = [
       "- An ossification center is now present in the distal epiphysis of the ulna.\n",
   },
   {
-    src: "/images/female_094.jpg",
+    src: "./images/female_094.jpg",
     text: "Female, age 7 years 10 months",
     gender: "female",
     boneAge: 94,
@@ -250,7 +250,7 @@ export const images = [
       "- The ulnar epiphysis has increased in size, and its proximal margin has begun to shape to its shaft.\n",
   },
   {
-    src: "/images/female_106.jpg",
+    src: "./images/female_106.jpg",
     text: "Female, age 8 years 10 months",
     gender: "female",
     boneAge: 106,
@@ -269,7 +269,7 @@ export const images = [
       "- The ulnar epiphysis has now flattened and widened to form a bony plate. Its distal margin is concave and there is a distinct styloid process.\n",
   },
   {
-    src: "/images/female_120.jpg",
+    src: "./images/female_120.jpg",
     text: "Female, age 10 years 0 months",
     gender: "female",
     boneAge: 120,
@@ -285,7 +285,7 @@ export const images = [
       "- The scaphoid and radial articular surfaces of the lunate are beginning to be defined.\n",
   },
   {
-    src: "/images/female_132.jpg",
+    src: "./images/female_132.jpg",
     text: "Female, age 11 years 0 months",
     gender: "female",
     boneAge: 132,
@@ -306,7 +306,7 @@ export const images = [
       "- The epiphysis of the ulna has shaped further to the distal end of its shaft, and its styloid process has become more prominent.\n",
   },
   {
-    src: "/images/female_144.jpg",
+    src: "./images/female_144.jpg",
     text: "Female, age 12 years 0 months",
     gender: "female",
     boneAge: 144,
@@ -321,7 +321,7 @@ export const images = [
       "- The epiphysis of the ulna has shaped further to the distal end of its shaft, and its styloid process has become more prominent.\n",
   },
   {
-    src: "/images/female_156.jpg",
+    src: "./images/female_156.jpg",
     text: "Female, age 13 years 0 months",
     gender: "female",
     boneAge: 156,
@@ -336,7 +336,7 @@ export const images = [
       "- Accessory sesamoids are usually visible radiographically at this stage.\n",
   },
   {
-    src: "/images/female_162.jpg",
+    src: "./images/female_162.jpg",
     text: "Female, age 13 years 6 months",
     gender: "female",
     boneAge: 162,
@@ -348,7 +348,7 @@ export const images = [
       "- Epiphyseal-diaphyseal fusion in the 1st metacarpal has begun.\n",
   },
   {
-    src: "/images/female_168.jpg",
+    src: "./images/female_168.jpg",
     text: "Female, age 14 years 0 months",
     gender: "female",
     boneAge: 168,
@@ -363,7 +363,7 @@ export const images = [
       "- The epiphyseal cartilage plates of the radius and ulna are now appreciably reduced in thickness.\n",
   },
   {
-    src: "/images/female_180.jpg",
+    src: "./images/female_180.jpg",
     text: "Female, age 15 years 0 months",
     gender: "female",
     boneAge: 180,
@@ -376,7 +376,7 @@ export const images = [
       "- The radial and ulnar epiphyses have begun to fuse with their shafts. This fusion has progressed farther in the ulna than in the radius.\n",
   },
   {
-    src: "/images/female_192.jpg",
+    src: "./images/female_192.jpg",
     text: "Female, age 16 years 0 months",
     gender: "female",
     boneAge: 192,
@@ -384,7 +384,7 @@ export const images = [
       "Ulna\n" + "- Fusion in the ulna is now almost complete.\n",
   },
   {
-    src: "/images/female_204.jpg",
+    src: "./images/female_204.jpg",
     text: "Female, age 17 years 0 months",
     gender: "female",
     boneAge: 204,
@@ -395,7 +395,7 @@ export const images = [
       "- Fusion is now complete in the radius and ulna.\n",
   },
   {
-    src: "/images/female_216.jpg",
+    src: "./images/female_216.jpg",
     text: "Female, age 18 years 0 months",
     gender: "female",
     boneAge: 216,
@@ -403,7 +403,7 @@ export const images = [
       "The hand is indistinguishable from that of a young adult. Traces of some epiphyseal lines of fusion can still be seen and may persist throughout life.",
   },
   {
-    src: "/images/male_000.jpg",
+    src: "./images/male_000.jpg",
     text: "Male, age 0 years 0 months",
     gender: "male",
     boneAge: 0,
@@ -417,7 +417,7 @@ export const images = [
       "- No ossification centers seen.\n",
   },
   {
-    src: "/images/male_003.jpg",
+    src: "./images/male_003.jpg",
     text: "Male, age 0 years 3 months",
     gender: "male",
     boneAge: 3,
@@ -435,7 +435,7 @@ export const images = [
       "- The flaring of the distal ends of the radius and ulna is slightly more pronounced.\n",
   },
   {
-    src: "/images/male_006.jpg",
+    src: "./images/male_006.jpg",
     text: "Male, age 0 years 6 months",
     gender: "male",
     boneAge: 6,
@@ -449,7 +449,7 @@ export const images = [
       "- The flaring of the distal ends of the radius and ulna is quite pronounced.\n",
   },
   {
-    src: "/images/male_009.jpg",
+    src: "./images/male_009.jpg",
     text: "Male, age 0 years 9 months",
     gender: "male",
     boneAge: 9,
@@ -460,7 +460,7 @@ export const images = [
       "- The surface of the capitate adjacent to the hamate has begun to flatten.\n",
   },
   {
-    src: "/images/male_012.jpg",
+    src: "./images/male_012.jpg",
     text: "Male, age 1 year 0 months",
     gender: "male",
     boneAge: 12,
@@ -471,7 +471,7 @@ export const images = [
       "- Some further flattening has occurred in the hamate surface of the capitate.\n",
   },
   {
-    src: "/images/male_015.jpg",
+    src: "./images/male_015.jpg",
     text: "Male, age 1 year 3 months",
     gender: "male",
     boneAge: 15,
@@ -486,7 +486,7 @@ export const images = [
       "- A small ossification center is visible in the distal radial epiphysis.\n",
   },
   {
-    src: "/images/male_018.jpg",
+    src: "./images/male_018.jpg",
     text: "Male, age 1 year 6 months",
     gender: "male",
     boneAge: 18,
@@ -499,7 +499,7 @@ export const images = [
       "- The ulnar side of the radial epiphysis is pointed and its radial side is thicker and convex.\n",
   },
   {
-    src: "/images/male_024.jpg",
+    src: "./images/male_024.jpg",
     text: "Male, age 2 years 0 months",
     gender: "male",
     boneAge: 24,
@@ -509,7 +509,7 @@ export const images = [
       "- The epiphyses of the 2nd-5th proximal phalanges are now disc-shaped and their margins are smooth.\n",
   },
   {
-    src: "/images/male_032.jpg",
+    src: "./images/male_032.jpg",
     text: "Male, age 2 years 8 months",
     gender: "male",
     boneAge: 32,
@@ -520,7 +520,7 @@ export const images = [
       "- The epiphysis of the distal phalanx of the thumb has flattened to conform to the shape of the adjacent surface of its shaft.\n",
   },
   {
-    src: "/images/male_036.jpg",
+    src: "./images/male_036.jpg",
     text: "Male, age 3 years 0 months",
     gender: "male",
     boneAge: 36,
@@ -533,7 +533,7 @@ export const images = [
       "- The volar and dorsal surfaces of the radial epiphysis can now be distinguished. The volar margin is visible as a rather thick white line. Distally the thin dorsal margin of the epiphysis projects beyond the volar margin.\n",
   },
   {
-    src: "/images/male_042.jpg",
+    src: "./images/male_042.jpg",
     text: "Male, age 3 years 6 months",
     gender: "male",
     boneAge: 42,
@@ -548,7 +548,7 @@ export const images = [
       "- The lunate is much advanced in its development as compared with the other bones.\n",
   },
   {
-    src: "/images/male_048.jpg",
+    src: "./images/male_048.jpg",
     text: "Male, age 4 years 0 months",
     gender: "male",
     boneAge: 48,
@@ -558,7 +558,7 @@ export const images = [
       "- The epiphyses of the 2nd and 3rd proximal phalanges are now somewhat wedge-shaped, tapering toward their ulnar ends.\n",
   },
   {
-    src: "/images/male_054.jpg",
+    src: "./images/male_054.jpg",
     text: "Male, age 4 years 6 months",
     gender: "male",
     boneAge: 54,
@@ -574,7 +574,7 @@ export const images = [
       "- The distal margin of the ulnar tip of the radial epiphysis, which will subsequently articulate with the lunate, has flattened slightly.\n",
   },
   {
-    src: "/images/male_060.jpg",
+    src: "./images/male_060.jpg",
     text: "Male, age 5 years 0 months",
     gender: "male",
     boneAge: 60,
@@ -587,7 +587,7 @@ export const images = [
       "- Both a lunate and a hamate facet can now be distinguished on the triquetral. Its free (non-articular) surface remains convex.\n",
   },
   {
-    src: "/images/male_072.jpg",
+    src: "./images/male_072.jpg",
     text: "Male, age 6 years 0 months",
     gender: "male",
     boneAge: 72,
@@ -605,7 +605,7 @@ export const images = [
       "- The part of the radial epiphysis from which the styloid process develops is beginning to enlarge.\n",
   },
   {
-    src: "/images/male_084.jpg",
+    src: "./images/male_084.jpg",
     text: "Male, age 7 years 0 months",
     gender: "male",
     boneAge: 84,
@@ -619,7 +619,7 @@ export const images = [
       "- The proximal surface of the ulnar epiphysis appears flattened.\n",
   },
   {
-    src: "/images/male_096.jpg",
+    src: "./images/male_096.jpg",
     text: "Male, age 8 years 0 months",
     gender: "male",
     boneAge: 96,
@@ -631,7 +631,7 @@ export const images = [
       "- The concavity in the base of the 2nd metacarpal adjacent to the trapezoid has become more pronounced. The ulnar portion of the base has begun to extend toward the capitate, with which it will later articulate.\n",
   },
   {
-    src: "/images/male_108.jpg",
+    src: "./images/male_108.jpg",
     text: "Male, age 9 years 0 months",
     gender: "male",
     boneAge: 108,
@@ -646,7 +646,7 @@ export const images = [
       "- The epiphysis of the ulna has widened and thickened to form a bony plate. Its styloid process is beginning to appear.\n",
   },
   {
-    src: "/images/male_120.jpg",
+    src: "./images/male_120.jpg",
     text: "Male, age 10 years 0 months",
     gender: "male",
     boneAge: 120,
@@ -663,7 +663,7 @@ export const images = [
       "- The pisiform sesamoid appears.\n",
   },
   {
-    src: "/images/male_132.jpg",
+    src: "./images/male_132.jpg",
     text: "Male, age 11 years 0 months",
     gender: "male",
     boneAge: 132,
@@ -681,7 +681,7 @@ export const images = [
       "- The pisiform is now more distinct than in the preceding standard, its shadow being visible through and between the hamate and triquetrum.\n",
   },
   {
-    src: "/images/male_138.jpg",
+    src: "./images/male_138.jpg",
     text: "Male, age 11 years 6 months",
     gender: "male",
     boneAge: 138,
@@ -694,7 +694,7 @@ export const images = [
       "- The developing styloid process of the radial epiphysis has become more distinct and the white line adjacent to the cartilage plate now extends farther laterally.\n",
   },
   {
-    src: "/images/male_150.jpg",
+    src: "./images/male_150.jpg",
     text: "Male, age 12 years 6 months",
     gender: "male",
     boneAge: 150,
@@ -705,7 +705,7 @@ export const images = [
       "- The articular surface differentiation has progressed farther in the distal than proximal row of carpals, and is most marked in the carpal-metacarpal area.\n",
   },
   {
-    src: "/images/male_156.jpg",
+    src: "./images/male_156.jpg",
     text: "Male, age 13 years 0 months",
     gender: "male",
     boneAge: 156,
@@ -719,7 +719,7 @@ export const images = [
       "- The adductor pollicis sesamoid is now visible, just medial to the head of the 1st metacarpal.\n",
   },
   {
-    src: "/images/male_162.jpg",
+    src: "./images/male_162.jpg",
     text: "Male, age 13 years 6 months",
     gender: "male",
     boneAge: 162,
@@ -738,7 +738,7 @@ export const images = [
       "- Reciprocal shaping is under way in the radioulnar joint.\n",
   },
   {
-    src: "/images/male_168.jpg",
+    src: "./images/male_168.jpg",
     text: "Male, age 14 years 0 months",
     gender: "male",
     boneAge: 168,
@@ -753,7 +753,7 @@ export const images = [
       "4. middle phalanges\n",
   },
   {
-    src: "/images/male_180.jpg",
+    src: "./images/male_180.jpg",
     text: "Male, age 15 years 0 months",
     gender: "male",
     boneAge: 180,
@@ -770,7 +770,7 @@ export const images = [
       "4. middle phalanges\n",
   },
   {
-    src: "/images/male_186.jpg",
+    src: "./images/male_186.jpg",
     text: "Male, age 15 years 6 months",
     gender: "male",
     boneAge: 186,
@@ -785,7 +785,7 @@ export const images = [
       "- The flexor sesamoid can now be seen through the head of the first metacarpal, immediately lateral to the adductor sesamoid.\n",
   },
   {
-    src: "/images/male_192.jpg",
+    src: "./images/male_192.jpg",
     text: "Male, age 16 years 0 months",
     gender: "male",
     boneAge: 192,
@@ -797,7 +797,7 @@ export const images = [
       "- The epiphyses of the 2nd-5th metacarpals have begun to fuse with their shafts.\n",
   },
   {
-    src: "/images/male_204.jpg",
+    src: "./images/male_204.jpg",
     text: "Male, age 17 years 0 months",
     gender: "male",
     boneAge: 204,
@@ -810,7 +810,7 @@ export const images = [
       "- Fusion has begun in the ulna.\n",
   },
   {
-    src: "/images/male_216.jpg",
+    src: "./images/male_216.jpg",
     text: "Male, age 18 years 0 months",
     gender: "male",
     boneAge: 216,
@@ -818,7 +818,7 @@ export const images = [
       "- All the epiphyses except that of the radius have fused with their shafts.\n",
   },
   {
-    src: "/images/male_228.jpg",
+    src: "./images/male_228.jpg",
     text: "Male, age 19 years 0 months",
     gender: "male",
     boneAge: 228,
